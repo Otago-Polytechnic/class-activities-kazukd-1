@@ -1,5 +1,7 @@
 package VideoRentalStore;
 
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 /**
  * This is a class for adding and getting customer information.
  *  
@@ -26,6 +28,9 @@ public class Customer {
 	/** post code  for customer */
 	private String postcode;
 	
+	/** birthday for customer */
+	private LocalDate DOB;
+	
 	/**
      * This is the constructor.
 	 *
@@ -35,14 +40,16 @@ public class Customer {
 	 *@param phone the phone number for customer
 	 *@param address the address for customer
 	 *@param postcode the post code for customer
+	 *@param DOB the birthday  for customer
      */
-	public Customer( String firstName, String lastName, String email, String phone, String address, String postcode) {
+	public Customer( String firstName, String lastName, String email, String phone, String address, String postcode, LocalDate DOB) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.phone = phone;
 		this.address = address;
 		this.postcode = postcode;
+		this.DOB = DOB;
 		
 	}
 	
@@ -96,6 +103,15 @@ public class Customer {
 	}
 	
 	
+
+	/**
+     * Set the birthday.
+     * @param _DOB  This is the parameter birthday of customer.
+     */
+	public void setDOB(LocalDate _DOB) {
+		DOB = _DOB;
+	}
+	
 	/**
      * Get the first name of the customer.
      * @return String first name.
@@ -146,14 +162,26 @@ public class Customer {
 	}
 	
 	/**
+	 * Get the birthday of the customer
+	 * @return LocalDate DOB.
+	 */
+	public LocalDate getDOB() {
+		return DOB;
+	}
+	
+	/**
 	 * Get the all stored data of the customer
 	 * @return String all data.
 	 */
 	public String toString() {
+		/** set date format for New Zealand */
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		
 		String s;
 		s = "FirstName:"+ firstName + " LastName:"+ lastName;
 		s = s + " email:" + email + " Phone:" + phone;
 		s = s + " address:" + address + " postcode:" + postcode;
+		s = s + " DOB:" + DOB.format(formatter);
 		return s;
 	}
 }
