@@ -5,10 +5,12 @@ import java.time.temporal.ChronoUnit;
 
 public class newRelease extends rentalVideo {
 	public newRelease(String title, String media) {
+		super(title,media);
+		/*
 		super.title = title;
 		super.media = media;
 		super.isRented = false;
-		
+		*/
 	}
 	
 	public boolean isOverdue(LocalDate today) {
