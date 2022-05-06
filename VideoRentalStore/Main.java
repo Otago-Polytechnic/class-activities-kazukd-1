@@ -786,7 +786,7 @@ public class Main {
 				Scanner input = new Scanner(System.in);
 				
 			while(menuNum!=6) {
-			//try {
+			try {
 				System.out.println("*** New Release Menu ***");
 				System.out.println("1 Add New Video");
 				System.out.println("2 Show all Video");
@@ -876,12 +876,12 @@ public class Main {
 					System.out.println("Wrong number!");
 					break;
 				}
-			/*	}
+				}
 			catch (Exception e) {
 				input.nextLine(); // Clear buffer to avoid infinite loop
 				System.out.println("Enter correct number");
 					
-			} */
+			} 
 			}// end while
 				
 				
@@ -903,10 +903,10 @@ public class Main {
 		addCustomerTestData();
 		
 		while(menuNum!=5) {
-		// try {
+		try {
 		System.out.println("*** Video Rental Main Menu ***");
 		System.out.println("1 Manage Customer");
-		System.out.println("2 Manage Video for plactical-1");
+		System.out.println("2 Manage Video for practical-1");
 		System.out.println("3 Manage Rental Video");
 		System.out.println("4 Manage New Release");
 		System.out.println("5 Exit");
@@ -941,10 +941,10 @@ public class Main {
 			System.out.println("Wrong number!");
 			break;
 		}
-		/*} catch(Exception e) {
+		} catch(Exception e) {
 			input.nextLine(); // Clear buffer to avoid infinite loop
 			System.out.println("Enter correct number!");
-		} */
+		} 
 		}// end while	
 		
 	}
