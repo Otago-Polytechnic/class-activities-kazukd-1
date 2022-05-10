@@ -1,12 +1,9 @@
 package VideoRentalStore;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+
 
 /**
  *  This is class using interface class: rental.
@@ -27,7 +24,7 @@ class rentalVideo implements rental {
 	protected String media;
 	
 	/** who is renting */
-	protected String renter;
+	protected Customer renter;
 
 	/**
 	 *  This is constructor for rentalVideo
@@ -39,7 +36,7 @@ class rentalVideo implements rental {
 		this.isRented = false;
 	 }
 	 
-	 public rentalVideo(String title, String media, boolean isRented, String renter,LocalDate rentDate) {
+	 public rentalVideo(String title, String media, boolean isRented, Customer renter,LocalDate rentDate) {
 			this.title = title;
 			this.media = media;
 			this.isRented = isRented;
@@ -60,15 +57,16 @@ class rentalVideo implements rental {
 		 return (today.isAfter(this.rentDate.plusDays(5)));
 		 
 	 }
+	 
 	 public int calculateFine(LocalDate today) {
 		 if(!isOverdue(today)) return 0;
 		 
-		 long duration = ChronoUnit.DAYS.between(this.rentDate, today)-4;
+		 long duration = ChronoUnit.DAYS.between(this.rentDate, today)-5;
 		 return (int)duration * 1 ;
 	 }
 	 
 	 public void rent(Customer p, LocalDate today) {
-		 this.renter = p.getFirstName();
+		 this.renter = p;
 		 this.isRented = true;
 		 this.rentDate = today;
 	 }
@@ -83,6 +81,7 @@ class rentalVideo implements rental {
 		   // set date format for New Zealand
 		   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		   String strRentDate;
+		   String strRenter;
 		   
 		   try {
 			   strRentDate = rentDate.format(formatter);
@@ -91,7 +90,14 @@ class rentalVideo implements rental {
 			   strRentDate = null;
 		   }
 		   
-			return "title:"+ title  + " media:" + media + " renter:" + renter+ " rentDate:" + strRentDate;
+		   try {
+			   strRenter = renter.getCustomerId()+ " " + renter.getFirstName() + " "+ renter.getLastName();
+		   }
+		   catch (Exception e) {
+			   strRenter = null;
+		   }
+		   
+			return "title:"+ title  + " media:" + media + " renter:" + strRenter + " rentDate:" + strRentDate;
 			
 		}
 	 
@@ -99,6 +105,7 @@ class rentalVideo implements rental {
 		   // set date format for New Zealand
 		   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		   String strRentDate;
+		   String strRenter;
 		   
 		   try {
 			   strRentDate = rentDate.format(formatter);
@@ -107,10 +114,17 @@ class rentalVideo implements rental {
 			   strRentDate = "null";
 		   }
 		   
-			return title  + ";"+ media + ";" + isRented +";" + renter+ ";" + strRentDate + "\n";
+		   try {
+			   strRenter = Integer.toString(renter.getCustomerId());
+		   }
+		   catch (Exception e) {
+			   strRenter = null;
+		   }
+		   
+			return title  + ";"+ media + ";" + isRented +";" + strRenter + ";" + strRentDate + "\n";
 			
 		}
-	 
+ 
 }
 
 

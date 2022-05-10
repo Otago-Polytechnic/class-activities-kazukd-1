@@ -10,6 +10,9 @@ import java.time.format.DateTimeFormatter;
  *
  */
 public class Customer {
+	/** customer membership number */
+	private int customerId;
+	
 	/** first name for customer */
 	private String firstName;
 	
@@ -42,7 +45,8 @@ public class Customer {
 	 *@param postcode the post code for customer
 	 *@param DOB the birthday  for customer
      */
-	public Customer( String firstName, String lastName, String email, String phone, String address, String postcode, LocalDate DOB) {
+	public Customer(int customerId, String firstName, String lastName, String email, String phone, String address, String postcode, LocalDate DOB) {
+		this.customerId = customerId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -110,6 +114,15 @@ public class Customer {
      */
 	public void setDOB(LocalDate _DOB) {
 		DOB = _DOB;
+	}
+	
+	
+	/**
+     * Get the customer membership number of the customer.
+     * @return int customerId.
+     */
+	public int getCustomerId() {
+		return customerId;
 	}
 	
 	/**

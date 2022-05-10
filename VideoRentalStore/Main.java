@@ -38,10 +38,10 @@ public class Main {
 		/** input from key board */
 		Scanner input = new Scanner(System.in);
 		
+		/** id for customer */
 		int customerMembershipNumber = customerID;
 		
-		/** id for customer */
-		int id;
+	
 		
 		/** first name for customer */
 		String firstName;
@@ -83,7 +83,7 @@ public class Main {
 		DOB = input.next();
 					
 		/** object for customer to add customer */
-		Customer customer1 = new Customer(firstName,lastName,email,phone,address,postcode,LocalDate.parse(DOB, formatter));
+		Customer customer1 = new Customer(customerMembershipNumber,firstName,lastName,email,phone,address,postcode,LocalDate.parse(DOB, formatter));
 		customerMap.put(customerMembershipNumber,customer1);
 		System.out.println("Customer Membership Number:" + customerMembershipNumber + " " + customer1);
 		System.out.println("Added New customer successfully!");
@@ -230,7 +230,7 @@ public class Main {
 					if(tokens[7].equals("null")) DOB = null;
 					else DOB = LocalDate.parse(tokens[7],formatter);
 					
-					Customer customer1 = new Customer(tokens[1],tokens[2],tokens[3],tokens[4],tokens[5],tokens[6],DOB);
+					Customer customer1 = new Customer(customerNumber,tokens[1],tokens[2],tokens[3],tokens[4],tokens[5],tokens[6],DOB);
 					customerMap.put(customerNumber,customer1);	
 					} while(true);
 					file.close();
@@ -264,7 +264,7 @@ public class Main {
 			    
 		for(int i=0; i< custData.length; i++) {	
 			/** object for customer to add customer data */
-			Customer customer1 = new Customer(custData[i][0],custData[i][1],custData[i][2],custData[i][3],custData[i][4],custData[i][5],LocalDate.parse(custData[i][6], formatter));
+			Customer customer1 = new Customer(customerID,custData[i][0],custData[i][1],custData[i][2],custData[i][3],custData[i][4],custData[i][5],LocalDate.parse(custData[i][6], formatter));
 			customerMap.put(customerID,customer1);
 			customerID++;
 		}
@@ -418,7 +418,7 @@ public class Main {
 		videoCallNumber++;
 							
 		rentalVideoId = videoCallNumber;
-		//　連続して入力できるようにするかどうか？　続けて入力　（Y/N）　カラ打ちで終了できるか？
+	
 		
 	}
 
@@ -530,7 +530,7 @@ public class Main {
 		/** rental video call number for hashmap key */
 		int vkey;
 		
-		// return date for testing overdue calculation
+		 //return date for testing overdue calculation
 		//String returnDate;
 		
 		System.out.println("Return video");
@@ -608,7 +608,7 @@ public class Main {
 	 * @param rentalVideoMap the video map is stored video data
 	 * @return Nothing
 	 */
-	public static void readRentalVideos(Map<Integer, rentalVideo> rentalVideoMap) {
+	public static void readRentalVideos(Map<Integer, rentalVideo> rentalVideoMap, Map<Integer, Customer> customerMap) {
 		Scanner input = new Scanner(System.in);
 		
 		/** answer for overwrite question y or Y as yes, n or N as no */ 
@@ -642,11 +642,16 @@ public class Main {
 			
 				int videoNumber = Integer.parseInt(tokens[0]); //video call number
 				
+				
+				Customer customer1;
+				if(tokens[4].equals("null")) customer1 = null;
+				else customer1 = customerMap.get(Integer.parseInt(tokens[4]));
+				
 				LocalDate rentDate;
 				if(tokens[5].equals("null")) rentDate = null;
 				else rentDate = LocalDate.parse(tokens[5],formatter);
 				
-				rentalVideo rentalvideo1 = new rentalVideo(tokens[1],tokens[2],Boolean.parseBoolean(tokens[3]),tokens[4],rentDate);
+				rentalVideo rentalvideo1 = new rentalVideo(tokens[1],tokens[2],Boolean.parseBoolean(tokens[3]),customer1,rentDate);
 				rentalVideoMap.put(videoNumber,rentalvideo1);	
 				} while(true);
 				file.close();
@@ -935,7 +940,7 @@ public class Main {
 			printRentalVideo(rentalVideoMap);
 		    break;
 		
-		case 4:
+		case 4: 
 			// Add customer
 			addCustomer(customerMap);
 		    break;
@@ -967,7 +972,7 @@ public class Main {
 			
 		case 10:
 			//read rental video data from file
-			readRentalVideos(rentalVideoMap);
+			readRentalVideos(rentalVideoMap,customerMap);
 			break;
 		
 		case 11:
