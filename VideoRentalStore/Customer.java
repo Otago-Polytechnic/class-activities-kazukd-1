@@ -184,4 +184,23 @@ public class Customer {
 		s = s + " DOB:" + DOB.format(formatter);
 		return s;
 	}
+	
+	 public String toLine() {
+		   // set date format for New Zealand
+		   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		   String strDOB;
+		   
+		   try {
+			   strDOB = DOB.format(formatter);
+		   }
+		   catch (Exception e) {
+			   strDOB = "null";
+		   }
+		   
+			return firstName   + ";"+ lastName + ";" + email  
+					+";" + phone + ";" + address + ";" + postcode + ";" + strDOB + "\n";
+			
+		}
+	
+	
 }

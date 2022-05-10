@@ -38,6 +38,14 @@ class rentalVideo implements rental {
 		this.media = media;
 		this.isRented = false;
 	 }
+	 
+	 public rentalVideo(String title, String media, boolean isRented, String renter,LocalDate rentDate) {
+			this.title = title;
+			this.media = media;
+			this.isRented = isRented;
+			this.renter = renter;
+			this.rentDate = rentDate;
+	 }
 	
 	public String get_title() {
 			return title;
@@ -72,15 +80,37 @@ class rentalVideo implements rental {
 	 } 
 	 
 	 public String toString() {
+		   // set date format for New Zealand
 		   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		   String strRentDate;
+		   
 		   try {
-		   strRentDate = rentDate.format(formatter);
-		   }catch (Exception e) {strRentDate = null;}
-		   String s;
-			s = "title:"+ title  + " media:" + media + " renter:" + renter+ " rentDate:" + strRentDate;
-			return s;
+			   strRentDate = rentDate.format(formatter);
+		   }
+		   catch (Exception e) {
+			   strRentDate = null;
+		   }
+		   
+			return "title:"+ title  + " media:" + media + " renter:" + renter+ " rentDate:" + strRentDate;
+			
 		}
+	 
+	 public String toLine() {
+		   // set date format for New Zealand
+		   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		   String strRentDate;
+		   
+		   try {
+			   strRentDate = rentDate.format(formatter);
+		   }
+		   catch (Exception e) {
+			   strRentDate = "null";
+		   }
+		   
+			return title  + ";"+ media + ";" + isRented +";" + renter+ ";" + strRentDate + "\n";
+			
+		}
+	 
 }
 
 
