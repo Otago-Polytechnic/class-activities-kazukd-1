@@ -14,6 +14,7 @@ import java.util.Scanner;
 import java.io.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.text.*;
 
 public class Main {
 	/** Set date format for New Zealand */
@@ -86,8 +87,6 @@ public class Main {
 		System.out.println("Added New customer successfully!");
 		customerMembershipNumber++;
 		customerID = customerMembershipNumber;
-		
-		input.close();
 	}
 	
 	/**
@@ -127,8 +126,6 @@ public class Main {
         	System.out.println("Customer not found");
 			System.out.println("Try again");
         }		
-		
-		input.close();
 	}
 	
 	/**
@@ -137,6 +134,7 @@ public class Main {
 	 * @return Nothing
 	 */
 	public static void printCustomer(Map<Integer, Customer> customerMap) {
+		System.out.println("*** All Customers lists ***");
 		for(Integer key: customerMap.keySet()){
 			System.out.println("ID:" + key +" "+ customerMap.get(key));
 		}
@@ -194,7 +192,6 @@ public class Main {
     			System.out.println("Error: File cannot be saved!");
     		}
 		}
-		input.close();
 	}
 	
 	/**
@@ -258,7 +255,6 @@ public class Main {
 					System.out.println("File cannot be opened");
 				}
 		}
-		input.close();
 	}
 	
 	/**
@@ -318,7 +314,6 @@ public class Main {
 							
 		rentalVideoId = videoCallNumber;
 	
-		input.close();
 	}
 
 	/**
@@ -358,7 +353,6 @@ public class Main {
         	System.out.println("Video not found");
 			System.out.println("Try again");
         }
-		input.close();
 	}
 	
 	/**
@@ -367,7 +361,9 @@ public class Main {
 	 * @return Nothing
 	 */
 	public static void printRentalVideo(Map<Integer, rentalVideo> rentalVideoMap) {
-	
+	    
+		System.out.println("*** All Videos lists ***");
+		
 		for(Integer key: rentalVideoMap.keySet()){
 			System.out.println("Video call number:" + key +" "+ rentalVideoMap.get(key));
 		}	
@@ -478,7 +474,6 @@ public class Main {
 				System.out.println("Successful returned!");
 			}
 		}
-		input.close();
 	}
 	
 	/**
@@ -593,7 +588,7 @@ public class Main {
 			System.out.println("File cannot be opened");
 			}	
 		}
-		input.close();
+		//input.close();
 	}
 	/**
 	 * This method is used to add video data using HashMap for testing.
@@ -914,8 +909,7 @@ public class Main {
 			input.nextLine(); // Clear buffer to avoid infinite loop
 			System.out.println("Enter correct number!");
 		} 
-		}// end while	
-		input.close();	
+		}// end while		
 	}
 	
 }
