@@ -4,7 +4,7 @@ package VideoRentalStore;
  * This is a main class for adding and getting customer and video information.
  *  
  * @author Kazuhisa Kondo
- * @version 1.0, 4 May 2022
+ * @version 1.0, 11 May 2022
  *
  */
 
@@ -12,9 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
@@ -22,13 +19,13 @@ public class Main {
 	/** Set date format for New Zealand */
 	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		
-	/** Object for storing customers data using HashMap */
-	static Map<Integer,Customer> customers = new HashMap<>();
-	
 	/** customer membership number which starts from 100 */
 	static int customerID = 100; 
 	
-	
+	/** key as video call number for rentalVideoMap which starts from 1 */
+		static int rentalVideoId = 1; 
+		
+		
 	/**
 	 * This method is used to add new customer from input using HashMap.
 	 * @param customerMap the customer map is stored customer data
@@ -89,6 +86,8 @@ public class Main {
 		System.out.println("Added New customer successfully!");
 		customerMembershipNumber++;
 		customerID = customerMembershipNumber;
+		
+		input.close();
 	}
 	
 	/**
@@ -128,6 +127,8 @@ public class Main {
         	System.out.println("Customer not found");
 			System.out.println("Try again");
         }		
+		
+		input.close();
 	}
 	
 	/**
@@ -139,6 +140,15 @@ public class Main {
 		for(Integer key: customerMap.keySet()){
 			System.out.println("ID:" + key +" "+ customerMap.get(key));
 		}
+		
+		System.out.println("Press Enter key to continue...");
+        try
+        {
+            System.in.read();
+        }  
+        catch(Exception e)
+        {}  
+		
 	}
 	
 	/**
@@ -184,7 +194,7 @@ public class Main {
     			System.out.println("Error: File cannot be saved!");
     		}
 		}
-		
+		input.close();
 	}
 	
 	/**
@@ -247,8 +257,8 @@ public class Main {
 				}catch(Exception e){
 					System.out.println("File cannot be opened");
 				}
-	}
-			
+		}
+		input.close();
 	}
 	
 	/**
@@ -269,118 +279,7 @@ public class Main {
 			customerID++;
 		}
 	}
-	
-	
-	
-	
-	/** Object for storing videos data using HashMap */
-	static Map<Integer,Video> videos = new HashMap<>();
-	
-	 /** video call number which starts from 1 */
-	static int videoId = 1; 
-	
-	/**
-	 * This method is used to add new video data using HashMap.
-	 * @return Nothing
-	 */
-	public static void addVideo() {
-		/** input from key board */
-		Scanner input = new Scanner(System.in);
-		
-		/** title for video */
-		String title;
-		
-		/** genre for video */
-		String genre;
-		
-		/** release date for video */
-		int releaseYear;
-		
-		/** length for video */
-		int length;
-		
-		/** rental fee for video */
-		double rentalFee;
-		
-		/** rented date for video */
-		String rentedDate;
-		
-		/** due date for video */
-		String dueDate;
-		
-		/** returned date  for video */
-		String returnedDate;
-		
-		/** customer id  for video */
-		int customerId;
-		
-		/** penaltyFee  for video */
-		double penaltyFee;
-		
-		// Set valuables for customer
-		System.out.print("Enter title:");
-		title = input.nextLine();
-		System.out.print("Enter genre:");
-		genre = input.nextLine();
-		System.out.print("Enter releaseYear:");
-		releaseYear = input.nextInt();
-		System.out.print("Enter length:");
-		length = input.nextInt();
-		System.out.print("Enter rentalFee:");
-		rentalFee = input.nextDouble();
-		System.out.print("Enter rentedDate:");
-		rentedDate = input.next();
-		System.out.print("Enter dueDate:");
-		dueDate = input.next();
-		System.out.print("Enter returnedDate:");
-		returnedDate = input.next();
-		System.out.print("Enter customerId:");
-		customerId = input.nextInt();
-		System.out.print("Enter penaltyFee:");
-		penaltyFee = input.nextDouble();
-		
 
-		/** object for video to add video data */
-		Video video1 = new Video(title,genre,releaseYear,length,rentalFee,rentedDate,dueDate,returnedDate,customerId,penaltyFee);
-		videos.put(videoId,video1);
-		videoId++;					
-		
-	}
-	
-	/**
-	 * This method is used to add video data using HashMap for testing.
-	 * @return Nothing
-	 */
-	public static void addVideoTestData() {
-		
-		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-	      
-		
-		/** Videos data for testing */
-		String [][] vidData = {{"Transcendence", "Action, Mystery, Thriller, Sci-Fi","2014","119","3.00","26/04/2022","01/05/2022","30/04/2022","100","0"},
-				                {"Replicas", "Sci-Fi, Drama, Mystery, Thriller","2018","107","4.00","20/04/2022","25/04/2022","","101","8.00"},
-				                {"Archive", "Drama, Mystery, Sci-Fi, Thriller","2020","105","5.00","20/04/2022","25/04/2022","","101","8.00"}};
-		
-	   
-		for(int i=0; i< vidData.length; i++) {
-			
-			/** object for video to add video data */
-			Video video1 = new Video(vidData[i][0],vidData[i][1],Integer.parseInt(vidData[i][2]),Integer.parseInt(vidData[i][3]),Double.parseDouble(vidData[i][4]),vidData[i][5],vidData[i][6],vidData[i][7],Integer.parseInt(vidData[i][8]),Double.parseDouble(vidData[i][9]));
-			videos.put(videoId,video1);
-			videoId++;
-		}
-
-	}
-
-	
-	
-	
-	
-	/** Object for storing rental videos data using HashMap */
-	static Map<Integer,rentalVideo> rentalvideos = new HashMap<>();
-
-	 /** key as video call number for rentalVideoMap which starts from 1 */
-	static int rentalVideoId = 1; 
 
 	/**
 	 * This method is used to add new video data using HashMap.
@@ -419,7 +318,7 @@ public class Main {
 							
 		rentalVideoId = videoCallNumber;
 	
-		
+		input.close();
 	}
 
 	/**
@@ -459,7 +358,7 @@ public class Main {
         	System.out.println("Video not found");
 			System.out.println("Try again");
         }
-		
+		input.close();
 	}
 	
 	/**
@@ -472,7 +371,14 @@ public class Main {
 		for(Integer key: rentalVideoMap.keySet()){
 			System.out.println("Video call number:" + key +" "+ rentalVideoMap.get(key));
 		}	
-		
+		System.out.println("Press Enter key to continue...");
+        try
+        {
+            System.in.read();
+        }  
+        catch(Exception e)
+        {}  
+        
 	}
 	
 	/**
@@ -511,11 +417,27 @@ public class Main {
 					System.out.println("Try again");
 				}else {
 					System.out.println("Customer name is "+ customerMap.get(ckey).getFirstName());
-					rentalVideoMap.get(vkey).rent(customerMap.get(ckey), LocalDate.now());
-					System.out.println("Successful rented!");
+					
+					// counting customer rented video
+					int countVideo=0;
+					for(Integer key: rentalVideoMap.keySet()){
+						if(rentalVideoMap.get(key).get_renterId()==ckey) {
+							countVideo++;
+							System.out.println("The Customer is renting "+ rentalVideoMap.get(key).get_title());
+						}
+						
+					}	
+					
+					if(countVideo==2) {
+						System.out.println("Renting video is not available more than two videos.");
+					}else {
+						rentalVideoMap.get(vkey).rent(customerMap.get(ckey), LocalDate.now());
+						System.out.println("Successful rented!");
+					}
 				}
 			}
 		}
+		input.close();
 	}
 	
 	/**
@@ -556,6 +478,7 @@ public class Main {
 				System.out.println("Successful returned!");
 			}
 		}
+		input.close();
 	}
 	
 	/**
@@ -601,6 +524,7 @@ public class Main {
     			System.out.println("Error: File cannot be saved!");
     		}
 		}
+		input.close();
 	}
 	
 	/**
@@ -657,11 +581,11 @@ public class Main {
 				file.close();
 			
 				//set next new videoId
-				videoId = 0;
+				rentalVideoId = 0;
 				for(Integer key: rentalVideoMap.keySet()){
-					if(key > videoId) videoId = key;
+					if(key > rentalVideoId) rentalVideoId = key;
 				}
-				videoId++;
+				rentalVideoId++;
 			
 				System.out.println("Read video data successfully");
 			
@@ -669,14 +593,13 @@ public class Main {
 			System.out.println("File cannot be opened");
 			}	
 		}
+		input.close();
 	}
 	/**
 	 * This method is used to add video data using HashMap for testing.
 	 * @return Nothing
 	 */
 	public static void addRentalVideoTestData(Map<Integer,rentalVideo> rentalVideoMap) {
-		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	      
 		
 		/** Videos data for testing */
@@ -730,7 +653,7 @@ public class Main {
 		newRelease newrelease1 = new newRelease(title,media);
 		newreleases.put(newReleaseId,newrelease1);
 		newReleaseId++;					
-		
+		input.close();
 	}
 
 	/**
@@ -738,8 +661,6 @@ public class Main {
 	 * @return Nothing
 	 */
 	public static void addNewReleaseTestData() {
-		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	      
 		
 		/** Videos data for testing */
@@ -762,7 +683,7 @@ public class Main {
 	 * main methods for new release
 	 * @return Nothing
 	 */
-	public static void NewReleaseMain() {
+	public static void NewReleaseMain(Map<Integer,Customer> customerMap) {
 				// Add video test data 
 				addNewReleaseTestData();
 				
@@ -809,7 +730,7 @@ public class Main {
 									
 					System.out.print("Enter Customer ID:");
 					ckey = input.nextInt();
-					System.out.println("Customer name is "+ customers.get(ckey).getFirstName());
+					System.out.println("Customer name is "+ customerMap.get(ckey).getFirstName());
 					
 					System.out.print("Enter rantal Video ID:");
 					vkey = input.nextInt();
@@ -821,8 +742,8 @@ public class Main {
 					if(newreleases.get(vkey).get_isRented()) {
 						System.out.println("Unavailable rental! Someone is renting this video");
 					}else {
-						//System.out.println(ckey + "customer" + customers.get(ckey));
-						newreleases.get(vkey).rent(customers.get(ckey), LocalDate.parse(sdate, formatter));
+						System.out.println(ckey + "customer" + customerMap.get(ckey));
+						newreleases.get(vkey).rent(customerMap.get(ckey), LocalDate.parse(sdate, formatter));
 						System.out.println("Successful rented!");
 					}
 						
@@ -871,7 +792,7 @@ public class Main {
 			} 
 			}// end while
 				
-				
+			input.close();	
 	}
 	
 	
@@ -994,7 +915,7 @@ public class Main {
 			System.out.println("Enter correct number!");
 		} 
 		}// end while	
-		
+		input.close();	
 	}
-
+	
 }

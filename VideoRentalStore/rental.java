@@ -17,7 +17,6 @@ public interface  rental
  public abstract void rent(Customer p, LocalDate today);
  public abstract void returnRental();
    
-  
 }
 
 

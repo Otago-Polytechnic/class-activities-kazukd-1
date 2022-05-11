@@ -52,6 +52,18 @@ class rentalVideo implements rental {
 		return isRented;
 	}
 	
+	public int get_renterId() {
+		
+		 try {
+			 return renter.getCustomerId();
+		   }
+		   catch (Exception e) {
+			   return 0;
+		   }
+		
+		
+	}
+	
 	 public boolean isOverdue(LocalDate today) {
 		 if(this.rentDate == null) return false;
 		 return (today.isAfter(this.rentDate.plusDays(5)));
