@@ -4,7 +4,7 @@ package VideoRentalStore;
  * This is a main class for adding and getting customer and video information.
  *  
  * @author Kazuhisa Kondo
- * @version 1.0, 11 May 2022
+ * @version 1.0, 12 May 2022
  *
  */
 
@@ -113,6 +113,7 @@ public class Main {
 		if (customerMap.containsKey(customerMembershipNumber)) {
         	System.out.println("Customer found");
         	System.out.println(customerMap.get(customerMembershipNumber));
+        	
         	System.out.print("Are you sure to delete this customer?(Y/N):");
         	yn= input.next().charAt(0);
         	if(yn=='y'|| yn=='Y') {
@@ -418,8 +419,9 @@ public class Main {
 					int countVideo=0;
 					for(Integer key: rentalVideoMap.keySet()){
 						if(rentalVideoMap.get(key).get_renterId()==ckey) {
+							if(countVideo==0) System.out.println("This customer is currently renting the following video(s)");
 							countVideo++;
-							System.out.println("The Customer is renting "+ rentalVideoMap.get(key).get_title());
+							System.out.println("* "+ rentalVideoMap.get(key).get_title());
 						}
 						
 					}	
@@ -430,10 +432,16 @@ public class Main {
 						rentalVideoMap.get(vkey).rent(customerMap.get(ckey), LocalDate.now());
 						System.out.println("Successful rented!");
 					}
+					System.out.println("Press Enter key to continue...");
+			        try
+			        {
+			            System.in.read();
+			        }  
+			        catch(Exception e)
+			        {}  
 				}
 			}
 		}
-		input.close();
 	}
 	
 	/**
@@ -519,7 +527,6 @@ public class Main {
     			System.out.println("Error: File cannot be saved!");
     		}
 		}
-		input.close();
 	}
 	
 	/**
@@ -588,7 +595,6 @@ public class Main {
 			System.out.println("File cannot be opened");
 			}	
 		}
-		//input.close();
 	}
 	/**
 	 * This method is used to add video data using HashMap for testing.
@@ -787,7 +793,6 @@ public class Main {
 			} 
 			}// end while
 				
-			input.close();	
 	}
 	
 	
