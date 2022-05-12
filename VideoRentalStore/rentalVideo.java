@@ -55,7 +55,7 @@ class rentalVideo implements rental {
 	 public int calculateFine(LocalDate today) {
 		 if(!isOverdue(today)) return 0;
 		 
-		 long duration = ChronoUnit.DAYS.between(this.rentDate, today)-4;
+		 long duration = ChronoUnit.DAYS.between(this.rentDate, today)-5;
 		 return (int)duration * 1 ;
 	 }
 	 

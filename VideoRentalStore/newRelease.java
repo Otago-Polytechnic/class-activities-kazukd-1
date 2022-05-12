@@ -18,7 +18,7 @@ public class newRelease extends rentalVideo {
 	public int calculateFine(LocalDate today) {
 		 if(!isOverdue(today)) return 0;
 		 
-		 long duration = ChronoUnit.DAYS.between(super.rentDate, today)-1;
+		 long duration = ChronoUnit.DAYS.between(super.rentDate, today)-2;
 		 return (int)duration * 2 ;
 	 }
 }
