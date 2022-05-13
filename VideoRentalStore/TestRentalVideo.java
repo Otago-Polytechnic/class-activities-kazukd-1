@@ -8,6 +8,13 @@ import java.time.format.DateTimeFormatter;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * This is a class for testing.
+ *  
+ * @author Kazuhisa Kondo
+ * @version 1.0, 13 May 2022
+ *
+ */
 class TestRentalVideo {
 
 	// Test get_isRented method after add rental video
