@@ -195,7 +195,6 @@ class TestRentalVideo {
 			rentalvideo1.returnRental();
 			assertTrue("renterId must be 0", rentalvideo1.get_renterId() == 0 );
 				
-		}
-		
+		}		
 		
 }
