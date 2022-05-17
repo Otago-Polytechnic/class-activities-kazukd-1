@@ -57,6 +57,14 @@ public class Customer {
 		
 	}
 	
+	/**
+     * Set the customerId.
+     * @param _customerId  This is the parameter customerId of customer.
+     */
+	public void setCustomerId(Integer _customerId) {
+		customerId = _customerId;
+	}
+	
 	
 	/**
      * Set the first name.
