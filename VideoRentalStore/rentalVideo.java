@@ -4,13 +4,17 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+import javafx.beans.property.SimpleStringProperty;
+
 
 /**
  *  This is class using interface class: rental.
  * 
  */
-class rentalVideo implements rental {
+public class rentalVideo implements rental {
 	 
+	protected int rentalvideoId;
+	
 	/** video title */
 	protected String title;
 	
@@ -25,7 +29,8 @@ class rentalVideo implements rental {
 	
 	/** who is renting */
 	protected Customer renter;
-
+	
+	protected String renterName;
 	/**
 	 *  This is constructor for rentalVideo
 	 */
@@ -36,6 +41,13 @@ class rentalVideo implements rental {
 		this.isRented = false;
 	 }
 	 
+	 public rentalVideo(int id,String title, String media) {
+			this.rentalvideoId = id;
+		  	this.title = title;
+			this.media = media;
+			this.isRented = false;
+		 }
+	 
 	 public rentalVideo(String title, String media, boolean isRented, Customer renter,LocalDate rentDate) {
 			this.title = title;
 			this.media = media;
@@ -44,10 +56,40 @@ class rentalVideo implements rental {
 			this.rentDate = rentDate;
 	 }
 	
-	public String get_title() {
-			return title;
+	 public void setRentalvideoId(int id) {
+		 rentalvideoId = id;
+	 }
+	 
+	 public void setTitle(String _title) {
+		 title = _title;
+	 }
+	 
+	 public void setMedia(String _media) {
+		 media = _media;
+	 }
+	 
+	 public void setRentDate(LocalDate _rentDate) {
+		 rentDate = _rentDate;
+	 }
+	 
+	 
+	public int getRentalvideoId() {
+			return this.rentalvideoId;
 	}
 	  
+	 
+	public String getTitle() {
+			return title;
+	}
+	
+	public String getMedia() {
+		return media;
+}
+	
+	public LocalDate getRentDate() {
+		return rentDate;
+	}
+	
 	public boolean get_isRented() {
 		return isRented;
 	}
@@ -81,6 +123,7 @@ class rentalVideo implements rental {
 		 this.renter = p;
 		 this.isRented = true;
 		 this.rentDate = today;
+		 this.renterName = p.getCustomerId()+":"+ p.getFirstName() + " " + p.getLastName();
 	 }
 	 
 	 public  void returnRental() {

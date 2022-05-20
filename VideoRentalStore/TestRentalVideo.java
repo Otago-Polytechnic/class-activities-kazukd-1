@@ -37,7 +37,7 @@ class TestRentalVideo {
 	@Test
 	void test_get_title() {
 		rentalVideo rentalvideo1 = new rentalVideo("Matrix","DVD");
-		assertTrue("title must be Matrix", rentalvideo1.get_title().equals("Matrix"));
+		assertTrue("title must be Matrix", rentalvideo1.getTitle().equals("Matrix"));
 	}
 	
 	// Test get_isRented method after rent video 

@@ -306,7 +306,7 @@ public class Main {
 				
 
 		/** object for video to add video data */
-		rentalVideo rentalvideo1 = new rentalVideo(title,media);
+		rentalVideo rentalvideo1 = new rentalVideo(videoCallNumber,title,media);
 		rentalVideoMap.put(videoCallNumber, rentalvideo1);
 		
 		System.out.println("video call number:" + videoCallNumber + " " + rentalvideo1);
@@ -400,7 +400,7 @@ public class Main {
 			System.out.println("Video not found.");
 			System.out.println("Try again");
 		}else {
-			System.out.println("Video title is "+ rentalVideoMap.get(vkey).get_title());
+			System.out.println("Video title is "+ rentalVideoMap.get(vkey).getTitle());
 		
 			if(rentalVideoMap.get(vkey).get_isRented()) {
 				System.out.println("Unavailable for rental! Someone is renting this video.");
@@ -421,7 +421,7 @@ public class Main {
 						if(rentalVideoMap.get(key).get_renterId()==ckey) {
 							if(countVideo==0) System.out.println("This customer is currently renting the following video(s)");
 							countVideo++;
-							System.out.println("* "+ rentalVideoMap.get(key).get_title());
+							System.out.println("* "+ rentalVideoMap.get(key).getTitle());
 						}
 						
 					}	
@@ -467,7 +467,7 @@ public class Main {
 			System.out.println("Try again");
 		}else {
 			if(!rentalVideoMap.get(vkey).get_isRented()) {
-				System.out.println("Video title is "+ rentalVideoMap.get(vkey).get_title());
+				System.out.println("Video title is "+ rentalVideoMap.get(vkey).getTitle());
 				System.out.println("No one is rented this video!");
 				System.out.println("Try again");
 			}else {
@@ -613,7 +613,7 @@ public class Main {
 		for(int i=0; i< rentvidData.length; i++) {
 			
 			/** object for video to add video data */
-			rentalVideo rentalvideo1 = new rentalVideo(rentvidData[i][0],rentvidData[i][1]);
+			rentalVideo rentalvideo1 = new rentalVideo(rentalVideoId,rentvidData[i][0],rentvidData[i][1]);
 			rentalVideoMap.put(rentalVideoId,rentalvideo1);
 			rentalVideoId++;
 		}
@@ -735,7 +735,7 @@ public class Main {
 					
 					System.out.print("Enter rantal Video ID:");
 					vkey = input.nextInt();
-					System.out.println("Video title is "+ newreleases.get(vkey).get_title());
+					System.out.println("Video title is "+ newreleases.get(vkey).getTitle());
 										
 					System.out.print("Enter rental date (dd/MM/yyyy):");
 					sdate = input.next();

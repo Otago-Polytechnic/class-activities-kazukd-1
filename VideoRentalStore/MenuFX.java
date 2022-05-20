@@ -11,6 +11,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -45,6 +46,12 @@ public class MenuFX extends Application {
 	public static Scene sceneMain = null;  //for Main Menu
 	public static Scene sceneCustomer = null; // for Customer Menu
 	public static Scene sceneAddCustomer = null; // for Add Customer
+	public static Scene sceneVideo = null; // for Video Menu
+	public static Scene sceneAddVideo = null; // for Add Video
+	public static Scene sceneRental = null; // for rent video
+	public static Scene sceneReturn = null; // for return video
+	public static Scene sceneShowRenting = null; // for return video
+	
 	
 	public static final ObservableList data = FXCollections.observableArrayList();
 	
@@ -54,28 +61,41 @@ public class MenuFX extends Application {
             abortAction(t);
         });
 		
+		/** Object for storing customers data using HashMap */
+		Map<Integer,Customer> customerMap = new HashMap<>();
+		
+		/** Object for storing video data using HashMap */
+		Map<Integer,rentalVideo> rentalVideoMap = new HashMap<>();
+		
+		// Load test data for rentalVideo
+		Main.addRentalVideoTestData(rentalVideoMap);
+		
 		//Set Stage title and stage size for Main Form
 		stage.setTitle("Rental Video System");
 		stage.setWidth(500);
 		stage.setHeight(500);
 		
-		//Set Stage size for other Form
+		//Set Stage size for sub Form
 		Stage stage2 = new Stage();
-		//stage2.setTitle("Customer");
 		stage2.setWidth(1000);
 		stage2.setHeight(400);
 		
 		
 		// Create stage
-		initMainForm(stage,stage2);
-		initCustomerForm(stage2);
+		initMainForm(stage,stage2,rentalVideoMap);
+		CustomerFX.initCustomerForm(stage2,customerMap);
+		VideoFX.initVideoForm(stage2,rentalVideoMap);
+		VideoFX.rentVideoForm(stage2,rentalVideoMap,customerMap);
+		VideoFX.returnVideoForm(stage2,rentalVideoMap,customerMap);
+		VideoFX.initShowRentingVideoListsForm(stage2,rentalVideoMap);
+		
 
 		stage.setScene(sceneMain);
 		stage.show();
 			
 	}
 	
-	public static void initMainForm(Stage stage,Stage stage2) {
+	public static void initMainForm(Stage stage,Stage stage2,Map<Integer,rentalVideo> rentalVideoMap) {
 	   // AnchorPane root = new AnchorPane();
 	  //  sceneMain = new Scene(root);
 
@@ -122,6 +142,29 @@ public class MenuFX extends Application {
 	    	setScene(stage2,sceneCustomer);
 	    });
 		
+		btn[1].setOnMouseClicked(event -> {
+			VideoFX.initVideoForm(stage2,rentalVideoMap);
+	    	stage2.setTitle("Video menu");	
+	    	setScene(stage2,sceneVideo);
+	    });
+		
+		
+		btn[2].setOnMouseClicked(event -> {
+	    	stage2.setTitle("Rent Video");	
+	    	setScene(stage2,sceneRental);
+	    });
+		
+		btn[3].setOnMouseClicked(event -> {
+	    	stage2.setTitle("Return Video");	
+	    	setScene(stage2,sceneReturn);
+	    });
+		
+		btn[4].setOnMouseClicked(event -> {
+			 VideoFX.initShowRentingVideoListsForm(stage2,rentalVideoMap);
+			
+			stage2.setTitle("Show renting lists");	
+	    	setScene(stage2,sceneShowRenting);
+	    });
 		//Exit stop application
 		btn[8].setOnMouseClicked(event -> {
 			//abortAction(WINDOW_CLOSE_REQUEST)
@@ -151,208 +194,7 @@ public class MenuFX extends Application {
 		
 	  }
 	
-	public static void initCustomerForm(Stage stage) {
-		/** Object for storing customers data using HashMap */
-		Map<Integer,Customer> customerMap = new HashMap<>();
-		
-		// Table view
-        final TableView<Customer> table = new TableView<>();
-        final ObservableList<Customer> tvObservableList = FXCollections.observableArrayList();
-        table.setEditable(true);
-		
-		AnchorPane root = new AnchorPane();
-	    sceneCustomer = new Scene(root);
-	   // sceneAddCustomer = new Scene(root);
-
-	    // Add Customer
-        CustomerFX.addCustomerFX(stage, table);
-	    
-	    HBox hb = new HBox();
-	    Label label1 = new Label("Manage Customer");
-	    label1.setFont(new Font("Verdana", 24)); //Arial
-	    label1.setTextFill(Color.web("#0000FF"));
-	    
-	    Button btn1 = new Button("Add");
-	    btn1.setOnMouseClicked(event -> {
-	    	//stage.close();
-	    	
-	    	setScene(stage,sceneAddCustomer);
-	    });
-	    Button btn2 = new Button("Delete");
-	    Button btn3 = new Button("Close");
-	    Button btn4 = new Button("test");
-	    btn1.setPrefWidth(100);
-	    btn2.setPrefWidth(100);
-	    btn3.setPrefWidth(100);
-	    //btn2.setPrefHeight(40);
-	    btn3.setOnMouseClicked(event -> {
-	    	stage.close();
-	    	
-	    //	setScene(stage,sceneMain);
-	    });
-	    btn4.setOnMouseClicked(event -> {
-	    	 System.out.println(customerMap.get(101));
-	         if(table.getSelectionModel().getSelectedItem() != null) { 
-	    	 Customer customer1 = table.getSelectionModel().getSelectedItem();
-	    	 System.out.println(customer1.getFirstName());   
-	         }
-	    });
-	    hb.getChildren().addAll(btn1,btn2,btn3,btn4);
-	    //AnchorPane.setTopAnchor(btn, 30.0);
-	    //AnchorPane.setTopAnchor(lbl, 10.0);
-	    //root.getChildren().addAll(btn,lbl);
-	    
-	    
-	    
-	    
-		
-	    final ListView listView = new ListView(data);
-	    listView.setPrefWidth(1000);
-	    Main.addCustomerTestData(customerMap);
-	    for(Integer key: customerMap.keySet()){
-			System.out.println("ID:" + key +" "+ customerMap.get(key));
-			data.add("ID:" + key +" "+ customerMap.get(key).toLine());
-	    }
-        
-       
-        listView.setItems(data);
-        
-        
-        
-        // Table appearance
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        table.setPrefWidth(600);
-        table.setPrefHeight(600);
-       
-        
-        // Data set for TableView
-        for(Integer key: customerMap.keySet()){
-			System.out.println("ID:" + key +" "+ customerMap.get(key));
-			tvObservableList.add(customerMap.get(key));
-			//data.add("ID:" + key +" "+ customerMap.get(key).toLine());
-	    }
-        table.setItems(tvObservableList);
-  
-        TableColumn<Customer,Integer> colId = new TableColumn<>("ID");
-        colId.setMinWidth(100);
-        colId.setCellValueFactory(new PropertyValueFactory<Customer, Integer>("customerId"));
-        //colId.setCellFactory(TextFieldTableCell.forTableColumn());
-        //colId.setCellFactory(col-> new IntegerEditingCell());
-        //colId.setCellFactory(Integer.parseInt(TextFieldTableCell.forTableColumn()));
-        colId.setOnEditCommit(
-            new EventHandler<CellEditEvent<Customer, Integer>>() {
-                @Override
-                public void handle(CellEditEvent<Customer, Integer> t) {
-                    ((Customer) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                            ).setCustomerId(t.getNewValue());
-                }
-            }
-        );
-        
-        
-        /*
-        TableColumn<Customer, Integer> colId = new TableColumn<>("ID");
-        colId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-        colId.setMinWidth(5);
-        colId.setOnEditCommit(
-                new EventHandler<CellEditEvent<Customer, Integer>>() {
-                    @Override
-                    public void handle(CellEditEvent<Customer, Integer> t) {
-                        ((Customer) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                                ).setCustomerId(t.getNewValue());
-                    }
-                }
-            );
-        */
-        /*
-        TableColumn<Customer, String> colFName = new TableColumn<>("First Name");
-        colFName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        colFName.setOnEditCommit(
-                new EventHandler<CellEditEvent<Customer, String>>() {
-                    @Override
-                    public void handle(CellEditEvent<Customer, String> t) {
-                        ((Customer) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                                ).setFirstName(t.getNewValue());
-                    }
-                }
-            ); */
-        //table.setEditable(true);
-        
-        TableColumn<Customer,String> colFName = new TableColumn<>("First Name");
-        colFName.setMinWidth(100);
-        colFName.setCellValueFactory(new PropertyValueFactory<Customer, String>("firstName"));
-        colFName.setCellFactory(TextFieldTableCell.forTableColumn());
-        colFName.setOnEditCommit(
-            new EventHandler<CellEditEvent<Customer, String>>() {
-                @Override
-                public void handle(CellEditEvent<Customer, String> t) {
-                    ((Customer) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                            ).setFirstName(t.getNewValue());
-                }
-            }
-        );
-        
-        TableColumn<Customer,String> colLName = new TableColumn<>("Last Name");
-        colLName.setMinWidth(100);
-        colLName.setCellValueFactory(new PropertyValueFactory<Customer, String>("lastName"));
-        colLName.setCellFactory(TextFieldTableCell.forTableColumn());
-        colLName.setOnEditCommit(
-            new EventHandler<CellEditEvent<Customer, String>>() {
-                @Override
-                public void handle(CellEditEvent<Customer, String> t) {
-                    ((Customer) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                            ).setLastName(t.getNewValue());
-                }
-            }
-        );
-        
-        
-        TableColumn<Customer,LocalDate> colDOB = new TableColumn<>("DOB");
-        colDOB.setMinWidth(100);
-        colDOB.setCellValueFactory(new PropertyValueFactory<Customer, LocalDate>("DOB"));
-        //colDOB.setCellFactory(TextFieldTableCell.forTableColumn());
-        colDOB.setOnEditCommit(
-            new EventHandler<CellEditEvent<Customer, LocalDate>>() {
-                @Override
-                public void handle(CellEditEvent<Customer, LocalDate> t) {
-                    ((Customer) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                            ).setDOB(t.getNewValue());
-                }
-            }
-        );
-        
-        
-        System.out.println(customerMap.get(101));
-        /*
-        TableColumn<Customer, String> colLName = new TableColumn<>("Last Name");
-        colLName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-*/
-        
-        //table.setEditable(true);
-        table.getColumns().addAll(colId,colFName,colLName,colDOB);
-        root.getChildren().addAll(table);
-        
-	    //StackPane root = new StackPane();
-        //AnchorPane.setTopAnchor(btn, 10.0);
-	    //AnchorPane.setTopAnchor(listView, 30.0);
-        //root.getChildren().addAll(listView,btn);
-        VBox vbox = new VBox();
-        vbox.setSpacing(5);
-        vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label1, hb,table);
-        root.getChildren().addAll(vbox);
-        //((Group) scene.getRoot()).getChildren().addAll(vbox);
-        
-        
-    
-        
-	  }
+	
 	public static  void setScene(Stage stage,Scene changeScene) {
 		    stage.setScene(changeScene);
 		    stage.show();
