@@ -4,6 +4,7 @@ package VideoRentalStore;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -50,7 +51,9 @@ public class MenuFX extends Application {
 	public static Scene sceneAddVideo = null; // for Add Video
 	public static Scene sceneRental = null; // for rent video
 	public static Scene sceneReturn = null; // for return video
-	public static Scene sceneShowRenting = null; // for return video
+	public static Scene sceneShowRenting = null; // for show renting video lists
+	public static Scene sceneShowOverdue = null; // for show overdue lists
+	public static Scene sceneFile = null; // for file save and read 
 	
 	
 	public static final ObservableList data = FXCollections.observableArrayList();
@@ -60,15 +63,25 @@ public class MenuFX extends Application {
 		stage.setOnCloseRequest((WindowEvent t) -> {
             abortAction(t);
         });
-		
+		// set date format for New Zealand
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		   
 		/** Object for storing customers data using HashMap */
 		Map<Integer,Customer> customerMap = new HashMap<>();
 		
 		/** Object for storing video data using HashMap */
 		Map<Integer,rentalVideo> rentalVideoMap = new HashMap<>();
 		
-		// Load test data for rentalVideo
+		// Load customer data for test
+	    Main.addCustomerTestData(customerMap);
+		
+		// Load rentalVideo  data for test
 		Main.addRentalVideoTestData(rentalVideoMap);
+		
+		// rent video for test
+		rentalVideoMap.get(1).rent(customerMap.get(100), LocalDate.parse("15/05/2022", formatter));
+		rentalVideoMap.get(3).rent(customerMap.get(101), LocalDate.parse("20/05/2022", formatter));
+		
 		
 		//Set Stage title and stage size for Main Form
 		stage.setTitle("Rental Video System");
@@ -82,12 +95,14 @@ public class MenuFX extends Application {
 		
 		
 		// Create stage
-		initMainForm(stage,stage2,rentalVideoMap);
+		initMainForm(stage,stage2,rentalVideoMap,customerMap);
 		CustomerFX.initCustomerForm(stage2,customerMap);
 		VideoFX.initVideoForm(stage2,rentalVideoMap);
 		VideoFX.rentVideoForm(stage2,rentalVideoMap,customerMap);
 		VideoFX.returnVideoForm(stage2,rentalVideoMap,customerMap);
 		VideoFX.initShowRentingVideoListsForm(stage2,rentalVideoMap);
+		VideoFX.initShowOverdueVideoListsForm(stage2,rentalVideoMap);
+		FileFX.fileForm(stage2,rentalVideoMap,customerMap);                       
 		
 
 		stage.setScene(sceneMain);
@@ -95,7 +110,7 @@ public class MenuFX extends Application {
 			
 	}
 	
-	public static void initMainForm(Stage stage,Stage stage2,Map<Integer,rentalVideo> rentalVideoMap) {
+	public static void initMainForm(Stage stage,Stage stage2,Map<Integer,rentalVideo> rentalVideoMap,Map<Integer,Customer> customerMap) {
 	   // AnchorPane root = new AnchorPane();
 	  //  sceneMain = new Scene(root);
 
@@ -108,10 +123,8 @@ public class MenuFX extends Application {
 		grid.setAlignment(Pos.TOP_CENTER); 
 		Label label1 = new Label("Video Rental System Menu");
 		label1.setFont(new Font("Haettenschweiler", 48)); //Arial
-		 label1.setTextFill(Color.web("#0000FF"));
-		//Label label2 = new Label("The first JavaFX program");
-		//layout.getChildren().add(label1);
-		//layout.getChildren().add(label2);
+		label1.setTextFill(Color.web("#0000FF"));
+		
 		grid.add(label1, 1, 0);
 	    
 		// button initialization
@@ -120,7 +133,7 @@ public class MenuFX extends Application {
 		//btnGrid.setVgap(5);
 		btnGrid.setAlignment(Pos.CENTER); 
 		String [] btnNames = {"Manage Customer","Manage Video","Rent Video","Return Video",
-				              "Show renting Lists","Show overdue Lists","Save data","Read data",
+				              "Show renting Lists","Show overdue Lists","File Save & Read",
 				              "Exit"};
 		int btnWidth=250;
 		int btnHeight=40;
@@ -138,6 +151,7 @@ public class MenuFX extends Application {
 		}
 		
 		btn[0].setOnMouseClicked(event -> {
+			CustomerFX.initCustomerForm(stage2,customerMap);
 	    	stage2.setTitle("Customer menu");	
 	    	setScene(stage2,sceneCustomer);
 	    });
@@ -165,8 +179,22 @@ public class MenuFX extends Application {
 			stage2.setTitle("Show renting lists");	
 	    	setScene(stage2,sceneShowRenting);
 	    });
+		
+		btn[5].setOnMouseClicked(event -> {
+			VideoFX.initShowOverdueVideoListsForm(stage2,rentalVideoMap);
+			
+			stage2.setTitle("Show overdue lists");	
+	    	setScene(stage2,sceneShowOverdue);
+	    });
+		
+		btn[6].setOnMouseClicked(event -> {
+			
+			stage2.setTitle("File Management");	
+	    	setScene(stage2,sceneFile);
+	    });
+		
 		//Exit stop application
-		btn[8].setOnMouseClicked(event -> {
+		btn[7].setOnMouseClicked(event -> {
 			//abortAction(WINDOW_CLOSE_REQUEST)
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 	        alert.setTitle("Confirmation");
@@ -180,13 +208,6 @@ public class MenuFX extends Application {
 	         //  t.consume();
 	        }
 			
-			//stage.close();
-			//Platform.exit();
-	       // System.exit(0);
-		/*
-	        stage.setOnCloseRequest((WindowEvent t) -> {
-				abortAction(WindowEvent.WINDOW_CLOSE_REQUEST);
-	        }); */
 	    });
 		
 		

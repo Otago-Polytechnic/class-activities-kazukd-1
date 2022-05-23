@@ -31,10 +31,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+/**
+ *  This is class using manage video for UI(JavaFX)
+ * 
+ */
 public class VideoFX {
 	public static void initVideoForm(Stage stage,Map<Integer,rentalVideo> rentalVideoMap) {
-		/** Object for storing customers data using HashMap */
-		//Map<Integer,Customer> customerMap = new HashMap<>();
+		
 		
 		// Table view
         final TableView<rentalVideo> table = new TableView<rentalVideo>();
@@ -43,8 +46,7 @@ public class VideoFX {
 		
 		AnchorPane root = new AnchorPane();
 	    MenuFX.sceneVideo = new Scene(root);
-	   // sceneAddCustomer = new Scene(root);
-
+	   
 	    // Add Video
         VideoFX.addVideoFX(stage, rentalVideoMap,tvObservableList2);
 	    
@@ -108,7 +110,6 @@ public class VideoFX {
 	    btn3.setOnMouseClicked(event -> {
 	    	stage.close();
 	    	
-	    //	setScene(stage,sceneMain);
 	    });
 	    
 	    // test button action for testing selected item
@@ -120,44 +121,20 @@ public class VideoFX {
 	         }
 	    });
 	    hb.getChildren().addAll(btn1,btn2,btn3);
-	    //AnchorPane.setTopAnchor(btn, 30.0);
-	    //AnchorPane.setTopAnchor(lbl, 10.0);
-	    //root.getChildren().addAll(btn,lbl);
-	    
-	    // Load customer data for test
-	    //Main.addRentalVideoTestData(rentalVideoMap);
+	
 	    for(Integer key: rentalVideoMap.keySet()){
 			System.out.println("ID:" + key +" "+ rentalVideoMap.get(key));
 			
 	    }
-	    /*
-		//test listView
-	    final ListView listView = new ListView(data);
-	    listView.setPrefWidth(1000);
-	    Main.addCustomerTestData(customerMap);
-	    for(Integer key: customerMap.keySet()){
-			System.out.println("ID:" + key +" "+ customerMap.get(key));
-			data.add("ID:" + key +" "+ customerMap.get(key).toLine());
-	    }
-        
-       
-        listView.setItems(data);
-        
-        */
 	    
+ 
 	   
         // Set TableView appearance
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefWidth(950);
         table.setPrefHeight(250);
         
-        /*ScrollBar table1VerticalScrollBar = findScrollBar( table, Orientation.VERTICAL);
-        ScrollBar scroll = new ScrollBar();
-        scroll.setMin(0);
-        scroll.setMax(400);
-        scroll.setValue(50);
-        */
-        
+ 
         // Data set for TableView
         for(Integer key: rentalVideoMap.keySet()){
 			//System.out.println("ID:" + key +" "+ customerMap.get(key));
@@ -183,36 +160,7 @@ public class VideoFX {
             }
         );
         
-      
-        /*
-        TableColumn<Customer, Integer> colId = new TableColumn<>("ID");
-        colId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-        colId.setMinWidth(5);
-        colId.setOnEditCommit(
-                new EventHandler<CellEditEvent<Customer, Integer>>() {
-                    @Override
-                    public void handle(CellEditEvent<Customer, Integer> t) {
-                        ((Customer) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                                ).setCustomerId(t.getNewValue());
-                    }
-                }
-            );
-        */
-        /*
-        TableColumn<Customer, String> colFName = new TableColumn<>("First Name");
-        colFName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        colFName.setOnEditCommit(
-                new EventHandler<CellEditEvent<Customer, String>>() {
-                    @Override
-                    public void handle(CellEditEvent<Customer, String> t) {
-                        ((Customer) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                                ).setFirstName(t.getNewValue());
-                    }
-                }
-            ); */
-        //table.setEditable(true);
+    
         
         TableColumn<rentalVideo,String> colTitle = new TableColumn<>("Title");
         colTitle.setPrefWidth(80);
@@ -231,7 +179,7 @@ public class VideoFX {
         
         
         TableColumn<rentalVideo,String> colMedia = new TableColumn<>("Media");
-        //colLName.setMinWidth(100);
+        
         colMedia.setPrefWidth(80);
         colMedia.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("media"));
         colMedia.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -248,29 +196,17 @@ public class VideoFX {
         
        
         
-        
-        //System.out.println(customerMap.get(101));
-        /*
-        TableColumn<Customer, String> colLName = new TableColumn<>("Last Name");
-        colLName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-*/
-        
    
         
         table.getColumns().addAll(colId,colTitle,colMedia);
         root.getChildren().addAll(table);
-        
-	    //StackPane root = new StackPane();
-        //AnchorPane.setTopAnchor(btn, 10.0);
-	    //AnchorPane.setTopAnchor(listView, 30.0);
-        //root.getChildren().addAll(listView,btn);
+   
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
         vbox.getChildren().addAll(label1, hb,table);
         root.getChildren().addAll(vbox);
-        //((Group) scene.getRoot()).getChildren().addAll(vbox);
-        
+     
         
     
         
@@ -316,28 +252,7 @@ public class VideoFX {
 			
 		}
 		
-		/*
-		// Medias
-        String medias[] =
-                   { "DVD", "BD","VHS", "LD" };
- 
-        // Create a combo box for media
-        ComboBox combo_box = new ComboBox(FXCollections.observableArrayList(medias));
-		gridFields.add(new Label("Media"), 0, 1);
-		gridFields.add(combo_box, 1, 1);
-		 EventHandler<ActionEvent> event =
-                  new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e)
-            {
-                selected.setText(combo_box.getValue() + " selected");
-            }
-        };
- 
-        // Set on action
-        combo_box.setOnAction(event);
- 
-		*
-		*/
+		
 		Button btn1 = new Button("Apply");
 		btn1.setOnMouseClicked(event -> {
 			boolean empty=false;
@@ -506,9 +421,7 @@ public class VideoFX {
 				        	        alert.setContentText("Renting video is not available more than two videos.");
 
 				        	        Optional<ButtonType> result = alert.showAndWait();
-									//lblMessage[1].setText("Renting video is not available more than two videos.");
-									//labels[1].setTextFill(Color.web("#FF0000"));
-									//lblMessage[1].setTextFill(Color.web("#FF0000"));
+								
 									System.out.println("Renting video is not available more than two videos.");
 								}else {
 									rentalVideoMap.get(vkey).rent(customerMap.get(ckey), LocalDate.now());
@@ -525,28 +438,14 @@ public class VideoFX {
 				        	        if (result.get() == ButtonType.OK) {
 				        	        	
 				              	    	System.out.println("Rented video successfully");
-				              	    	//stage.close();
-				              	    	//MenuFX.setScene(stage,MenuFX.sceneMain);
+				              	    	
 				        	        } else {
 				        	        	
 				        	        }
-									
-									
-									
-										
-									 
-									 
-									 
-									 
-									 
-									 
+																	 
 								}
 							}
 				}
-				 
-				
-				 
-				 
 				 
 			}
 			
@@ -555,6 +454,17 @@ public class VideoFX {
 	    Button btn2 = new Button("Close"); //Button close then go back customer menu
 	    btn2.setOnMouseClicked(event -> {
 	    	//MenuFX.setScene(stage,MenuFX.sceneMain);
+	    	for(TextField tf: textFields) {
+	    		tf.clear();
+			}
+	    	for(Label lbl: labels) {
+	    		lbl.setTextFill(Color.web("#000000"));
+			}
+	    	for(Label lblmsg: lblMessage) {
+	    		lblmsg.setText("");
+	    		lblmsg.setTextFill(Color.web("#000000"));
+			}
+	    	
 	    	stage.close();
 	    });
 	 
@@ -592,8 +502,8 @@ public class VideoFX {
 		gridFields.setAlignment(Pos.TOP_CENTER);
 		
 				
-		// Set Customer information fields
-		String [] labelNames = {"Video call Number"};
+		// Set label and text fields
+		String [] labelNames = {"Video call Number","Overdue fine"};
 		int fieldsLength= labelNames.length;
 		Label [] labels  = new Label[fieldsLength];
 		TextField []textFields = new TextField[fieldsLength];
@@ -610,7 +520,8 @@ public class VideoFX {
 			gridFields.add(textFields[i], 1, i*2);
 			gridFields.add(lblMessage[i], 1, i*2+1);
 		}
-		
+			
+		//Video call Number
 		textFields[0].setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -620,6 +531,18 @@ public class VideoFX {
     				msg = "Title:" + rentalVideoMap.get(vkey).getTitle();
     				lblMessage[0].setTextFill(Color.web("#000000"));
     				errFlag[0] = false;
+    				if(!rentalVideoMap.get(vkey).get_isRented()) {
+    					msg += " Not rented this video.";
+    					//labels[0].setTextFill(Color.web("#FF0000"));
+    					lblMessage[0].setTextFill(Color.web("#FF0000"));
+    					System.out.println("Not rented this video.");
+    					errFlag[0] = true;
+    				}else {
+    					//Calculate fine
+    					textFields[1].setText("$"+Integer.toString(rentalVideoMap.get(vkey).calculateFine(LocalDate.now())));
+				
+    				}
+    				
     			}else {
     				msg="Video not found";
     				lblMessage[0].setTextFill(Color.web("#FF0000"));
@@ -629,7 +552,8 @@ public class VideoFX {
             }
         });
 		
-		
+		// fine is not editable
+		textFields[1].setEditable(false);	
 		
 		Button btn1 = new Button("Apply");
 		btn1.setOnMouseClicked(event -> {
@@ -637,31 +561,34 @@ public class VideoFX {
 			for(TextField s: textFields) {
 				if(s.getText()=="") empty=true;
 			}
-			for(int i=0;i<fieldsLength;i++) {
-				if(textFields[i].getText()=="") {
-					labels[i].setText(labelNames[i]+"*");
-					labels[i].setTextFill(Color.web("#FF0000"));
+			
+			//for(int i=0;i<fieldsLength;i++) {
+				if(textFields[0].getText()=="") {
+					labels[0].setText(labelNames[0]+"*");
+					labels[0].setTextFill(Color.web("#FF0000"));
 				}else {
-				labels[i].setText(labelNames[i]);
-				labels[i].setTextFill(Color.web("#000000"));
+				labels[0].setText(labelNames[0]);
+				labels[0].setTextFill(Color.web("#000000"));
 			}
-			}
+			//}
 			if(empty==false&&errFlag[0]==false) {
 				
 				
 				int vkey = Integer.parseInt(textFields[0].getText()); //video id 
 				
-				if(!rentalVideoMap.get(vkey).get_isRented()) {
-					lblMessage[0].setText("Not rented this video.");
-					labels[0].setTextFill(Color.web("#FF0000"));
-					lblMessage[0].setTextFill(Color.web("#FF0000"));
-					System.out.println("Not rented this video..");
-					System.out.println("Try again");
 							
-				}else {
+			
 					rentalVideoMap.get(vkey).returnRental();
-					textFields[0].clear();
-					lblMessage[0].setText("");
+					for(TextField tf: textFields) {
+			    		tf.clear();
+					}
+			    	for(Label lbl: labels) {
+			    		lbl.setTextFill(Color.web("#000000"));
+					}
+			    	for(Label lblmsg: lblMessage) {
+			    		lblmsg.setText("");
+			    		lblmsg.setTextFill(Color.web("#000000"));
+					}
 					Alert alert = new Alert(Alert.AlertType.INFORMATION);
         	        alert.setTitle("Information");
         	        alert.setHeaderText(null);
@@ -671,13 +598,25 @@ public class VideoFX {
 					System.out.println("Return video successfully");
 				}
 	 
-			}
 			
  	    });
 
 	    Button btn2 = new Button("Close"); //Button close then go back customer menu
 	    btn2.setOnMouseClicked(event -> {
 	    	//MenuFX.setScene(stage,MenuFX.sceneMain);
+	    	for(TextField tf: textFields) {
+	    		tf.clear();
+			}
+	    	for(Label lbl: labels) {
+	    		lbl.setTextFill(Color.web("#000000"));
+			}
+	    	for(Label lblmsg: lblMessage) {
+	    		lblmsg.setText("");
+	    		lblmsg.setTextFill(Color.web("#000000"));
+			}
+	    	
+	    	
+	    	
 	    	stage.close();
 	    });
 	 
@@ -791,30 +730,12 @@ public class VideoFX {
 	    	 
 	    });
 	    hb.getChildren().addAll(btn3);
-	    //AnchorPane.setTopAnchor(btn, 30.0);
-	    //AnchorPane.setTopAnchor(lbl, 10.0);
-	    //root.getChildren().addAll(btn,lbl);
-	    
-	    // Load customer data for test
-	    //Main.addRentalVideoTestData(rentalVideoMap);
+	  
 	    for(Integer key: rentalVideoMap.keySet()){
 			System.out.println("ID:" + key +" "+ rentalVideoMap.get(key));
 			
 	    }
-	    /*
-		//test listView
-	    final ListView listView = new ListView(data);
-	    listView.setPrefWidth(1000);
-	    Main.addCustomerTestData(customerMap);
-	    for(Integer key: customerMap.keySet()){
-			System.out.println("ID:" + key +" "+ customerMap.get(key));
-			data.add("ID:" + key +" "+ customerMap.get(key).toLine());
-	    }
-        
-       
-        listView.setItems(data);
-        
-        */
+	  
 	    
 	   
         // Set TableView appearance
@@ -822,12 +743,6 @@ public class VideoFX {
         table.setPrefWidth(950);
         table.setPrefHeight(250);
         
-        /*ScrollBar table1VerticalScrollBar = findScrollBar( table, Orientation.VERTICAL);
-        ScrollBar scroll = new ScrollBar();
-        scroll.setMin(0);
-        scroll.setMax(400);
-        scroll.setValue(50);
-        */
         
         // Data set for TableView
         for(Integer key: rentalVideoMap.keySet()){
@@ -847,47 +762,7 @@ public class VideoFX {
         //colId.setCellFactory(TextFieldTableCell.forTableColumn());
         //colId.setCellFactory(col-> new IntegerEditingCell());
         //colId.setCellFactory(Integer.parseInt(TextFieldTableCell.forTableColumn()));
-        colId.setOnEditCommit(
-            new EventHandler<CellEditEvent<rentalVideo, Integer>>() {
-                @Override
-                public void handle(CellEditEvent<rentalVideo, Integer> t) {
-                    ((rentalVideo) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                            ).setRentalvideoId(t.getNewValue());
-                }
-            }
-        );
         
-      
-        /*
-        TableColumn<Customer, Integer> colId = new TableColumn<>("ID");
-        colId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-        colId.setMinWidth(5);
-        colId.setOnEditCommit(
-                new EventHandler<CellEditEvent<Customer, Integer>>() {
-                    @Override
-                    public void handle(CellEditEvent<Customer, Integer> t) {
-                        ((Customer) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                                ).setCustomerId(t.getNewValue());
-                    }
-                }
-            );
-        */
-        /*
-        TableColumn<Customer, String> colFName = new TableColumn<>("First Name");
-        colFName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        colFName.setOnEditCommit(
-                new EventHandler<CellEditEvent<Customer, String>>() {
-                    @Override
-                    public void handle(CellEditEvent<Customer, String> t) {
-                        ((Customer) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                                ).setFirstName(t.getNewValue());
-                    }
-                }
-            ); */
-        //table.setEditable(true);
         
         TableColumn<rentalVideo,String> colTitle = new TableColumn<>("Title");
         colTitle.setPrefWidth(80);
@@ -921,35 +796,196 @@ public class VideoFX {
             }
         );
         
+        TableColumn<rentalVideo,String> colRenterName = new TableColumn<>("Renter");
+        //colLName.setMinWidth(100);
+        colRenterName.setPrefWidth(80);
+        colRenterName.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("renterName"));
+        colRenterName.setCellFactory(TextFieldTableCell.forTableColumn());
+        colRenterName.setOnEditCommit(
+            new EventHandler<CellEditEvent<rentalVideo, String>>() {
+                @Override
+                public void handle(CellEditEvent<rentalVideo, String> t) {
+                    ((rentalVideo) t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())
+                            ).setMedia(t.getNewValue());
+                }
+            }
+        );
+        
        
         TableColumn<rentalVideo,LocalDate> colRentDate = new TableColumn<>("Rent Date");
         colRentDate.setPrefWidth(80);
         colRentDate.setCellValueFactory(new PropertyValueFactory<rentalVideo, LocalDate>("rentDate"));
-        
-        //System.out.println(customerMap.get(101));
-        /*
-        TableColumn<Customer, String> colLName = new TableColumn<>("Last Name");
-        colLName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-*/
-        
    
         
-        table.getColumns().addAll(colId,colTitle,colMedia,colRentDate);
+        table.getColumns().addAll(colId,colTitle,colMedia,colRenterName,colRentDate);
         root.getChildren().addAll(table);
         
-	    //StackPane root = new StackPane();
-        //AnchorPane.setTopAnchor(btn, 10.0);
-	    //AnchorPane.setTopAnchor(listView, 30.0);
-        //root.getChildren().addAll(listView,btn);
+
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
         vbox.getChildren().addAll(label1, hb,table);
         root.getChildren().addAll(vbox);
-        //((Group) scene.getRoot()).getChildren().addAll(vbox);
-        
+   
         
     
 	  } // End Show renting video lists
+
+	public static void initShowOverdueVideoListsForm(Stage stage,Map<Integer,rentalVideo> rentalVideoMap) {
+		
+		// Table view
+        final TableView<rentalVideo> table = new TableView<rentalVideo>();
+        final ObservableList<rentalVideo> tvObservableList2 = FXCollections.observableArrayList();
+        
+		
+		AnchorPane root = new AnchorPane();
+	    MenuFX.sceneShowOverdue = new Scene(root);
+	    
+	    HBox hb = new HBox();
+	    Label label1 = new Label("Show Overdue Lists");
+	    label1.setFont(new Font("Verdana", 24)); //Arial
+	    label1.setTextFill(Color.web("#0000FF"));
+	    
+	    Button btn3 = new Button("Close");
+	    Button btn4 = new Button("Show Renting Lists");
+	    
+	    btn3.setPrefWidth(100);
+
+	    // close button action
+	    btn3.setOnMouseClicked(event -> {
+	    	stage.close();
+	    });
+	    
+	    // test button action for testing selected item
+	    btn4.setOnMouseClicked(event -> {
+	    	 //System.out.println(customerMap.get(101));
+	    	table.getItems().clear();
+	    	 for(Integer key: rentalVideoMap.keySet()){
+	    		 if(rentalVideoMap.get(key).isOverdue(LocalDate.now()) == true) {
+	 	         	System.out.println(rentalVideoMap.get(key).isRented);
+	 	         	tvObservableList2.add(rentalVideoMap.get(key));
+	 	 			System.out.println(rentalVideoMap.get(key));
+	 	 			}
+	    		 if(rentalVideoMap.get(key).isOverdue(LocalDate.now())==true) System.out.println("true");
+	    		 System.out.println("ID:" + key +" "+ rentalVideoMap.get(key) + rentalVideoMap.get(key).isRented);
+	 			
+	 	    }
+	    	 
+	    	 
+	    	 
+	    });
+	    hb.getChildren().addAll(btn3);
+	
+	    
+	    for(Integer key: rentalVideoMap.keySet()){
+			System.out.println("ID:" + key +" "+ rentalVideoMap.get(key));
+			
+	    }
+	
+	    
+	   
+        // Set TableView appearance
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.setPrefWidth(950);
+        table.setPrefHeight(250);
+  
+        // Data set for TableView
+        for(Integer key: rentalVideoMap.keySet()){
+			
+			if(rentalVideoMap.get(key).isOverdue(LocalDate.now()) == true) {
+        	System.out.println(rentalVideoMap.get(key).getRentDate());
+        	tvObservableList2.add(rentalVideoMap.get(key));
+			System.out.println("Overdue:" + rentalVideoMap.get(key));
+			}
+			
+	    }
+        table.setItems(tvObservableList2);
+ 
+        TableColumn<rentalVideo,Integer> colId = new TableColumn<>("ID");
+        colId.setPrefWidth(40);
+        colId.setCellValueFactory(new PropertyValueFactory<rentalVideo, Integer>("rentalvideoId"));
+        //colId.setCellFactory(TextFieldTableCell.forTableColumn());
+        //colId.setCellFactory(col-> new IntegerEditingCell());
+        //colId.setCellFactory(Integer.parseInt(TextFieldTableCell.forTableColumn()));
+        colId.setOnEditCommit(
+            new EventHandler<CellEditEvent<rentalVideo, Integer>>() {
+                @Override
+                public void handle(CellEditEvent<rentalVideo, Integer> t) {
+                    ((rentalVideo) t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())
+                            ).setRentalvideoId(t.getNewValue());
+                }
+            }
+        );
+        
+      
+     
+        
+        TableColumn<rentalVideo,String> colTitle = new TableColumn<>("Title");
+        colTitle.setPrefWidth(80);
+        colTitle.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("title"));
+        colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
+        colTitle.setOnEditCommit(
+            new EventHandler<CellEditEvent<rentalVideo, String>>() {
+                @Override
+                public void handle(CellEditEvent<rentalVideo, String> t) {
+                    ((rentalVideo) t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())
+                            ).setTitle(t.getNewValue());
+                }
+            }
+        );
+        
+        
+        TableColumn<rentalVideo,String> colMedia = new TableColumn<>("Media");
+        //colLName.setMinWidth(100);
+        colMedia.setPrefWidth(80);
+        colMedia.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("media"));
+        colMedia.setCellFactory(TextFieldTableCell.forTableColumn());
+        colMedia.setOnEditCommit(
+            new EventHandler<CellEditEvent<rentalVideo, String>>() {
+                @Override
+                public void handle(CellEditEvent<rentalVideo, String> t) {
+                    ((rentalVideo) t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())
+                            ).setMedia(t.getNewValue());
+                }
+            }
+        );
+        
+        TableColumn<rentalVideo,String> colRenterName = new TableColumn<>("Renter");
+        //colLName.setMinWidth(100);
+        colRenterName.setPrefWidth(80);
+        colRenterName.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("renterName"));
+        colRenterName.setCellFactory(TextFieldTableCell.forTableColumn());
+        colRenterName.setOnEditCommit(
+            new EventHandler<CellEditEvent<rentalVideo, String>>() {
+                @Override
+                public void handle(CellEditEvent<rentalVideo, String> t) {
+                    ((rentalVideo) t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())
+                            ).setMedia(t.getNewValue());
+                }
+            }
+        );
+        TableColumn<rentalVideo,LocalDate> colRentDate = new TableColumn<>("Rent Date");
+        colRentDate.setPrefWidth(80);
+        colRentDate.setCellValueFactory(new PropertyValueFactory<rentalVideo, LocalDate>("rentDate"));
+             
+        table.getColumns().addAll(colId,colTitle,colMedia,colRenterName,colRentDate);
+        root.getChildren().addAll(table);
+        
+	   
+        VBox vbox = new VBox();
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(10, 0, 0, 10));
+        vbox.getChildren().addAll(label1, hb,table);
+        root.getChildren().addAll(vbox);
+       
+    
+	  } // End Show overdue video lists
+	
+	
 	
 }

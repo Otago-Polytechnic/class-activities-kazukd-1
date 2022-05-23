@@ -54,8 +54,29 @@ public class rentalVideo implements rental {
 			this.isRented = isRented;
 			this.renter = renter;
 			this.rentDate = rentDate;
+			try {
+				renterName = renter.getCustomerId()+ " " + renter.getFirstName() + " "+ renter.getLastName();
+			   }
+			   catch (Exception e) {
+				   renterName = null;
+			   }
 	 }
 	
+	 public rentalVideo(int id,String title, String media, boolean isRented, Customer renter,LocalDate rentDate) {
+			this.rentalvideoId = id;
+		    this.title = title;
+			this.media = media;
+			this.isRented = isRented;
+			this.renter = renter;
+			this.rentDate = rentDate;
+			try {
+				renterName = renter.getCustomerId()+ " " + renter.getFirstName() + " "+ renter.getLastName();
+			   }
+			   catch (Exception e) {
+				   renterName = null;
+			   }
+	 }
+	 
 	 public void setRentalvideoId(int id) {
 		 rentalvideoId = id;
 	 }
@@ -102,8 +123,14 @@ public class rentalVideo implements rental {
 		   catch (Exception e) {
 			   return 0;
 		   }
-		
-		
+			
+	}
+	
+	public void setRenterName(String _renterName) {
+		this.renterName=_renterName;
+	}
+	public String getRenterName() {
+		return this.renterName;
 	}
 	
 	 public boolean isOverdue(LocalDate today) {

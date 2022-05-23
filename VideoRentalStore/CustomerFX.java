@@ -36,10 +36,13 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
+/**
+ *  This is class using manage customer for UI(JavaFX)
+ * 
+ */
 public class CustomerFX{
 	public static void initCustomerForm(Stage stage,Map<Integer,Customer> customerMap) {
-		/** Object for storing customers data using HashMap */
-		//Map<Integer,Customer> customerMap = new HashMap<>();
+		
 		
 		// Table view
         final TableView<Customer> table = new TableView<>();
@@ -48,8 +51,7 @@ public class CustomerFX{
 		
 		AnchorPane root = new AnchorPane();
 	    MenuFX.sceneCustomer = new Scene(root);
-	   // sceneAddCustomer = new Scene(root);
-
+	   
 	    // Add Customer
         CustomerFX.addCustomerFX(stage, customerMap,tvObservableList);
 	    
@@ -113,7 +115,7 @@ public class CustomerFX{
 	    btn3.setOnMouseClicked(event -> {
 	    	stage.close();
 	    	
-	    //	setScene(stage,sceneMain);
+	  
 	    });
 	    
 	    // test button action for testing selected item
@@ -125,40 +127,14 @@ public class CustomerFX{
 	         }
 	    });
 	    hb.getChildren().addAll(btn1,btn2,btn3);
-	    //AnchorPane.setTopAnchor(btn, 30.0);
-	    //AnchorPane.setTopAnchor(lbl, 10.0);
-	    //root.getChildren().addAll(btn,lbl);
-	    
-	    // Load customer data for test
-	    Main.addCustomerTestData(customerMap);
-	    
-	    /*
-		//test listView
-	    final ListView listView = new ListView(data);
-	    listView.setPrefWidth(1000);
-	    Main.addCustomerTestData(customerMap);
-	    for(Integer key: customerMap.keySet()){
-			System.out.println("ID:" + key +" "+ customerMap.get(key));
-			data.add("ID:" + key +" "+ customerMap.get(key).toLine());
-	    }
-        
-       
-        listView.setItems(data);
-        
-        */
+	  
 	    
 	   
         // Set TableView appearance
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefWidth(950);
         table.setPrefHeight(250);
-        
-        /*ScrollBar table1VerticalScrollBar = findScrollBar( table, Orientation.VERTICAL);
-        ScrollBar scroll = new ScrollBar();
-        scroll.setMin(0);
-        scroll.setMax(400);
-        scroll.setValue(50);
-        */
+   
         
         // Data set for TableView
         for(Integer key: customerMap.keySet()){
@@ -185,36 +161,7 @@ public class CustomerFX{
             }
         );
         
-        
-        /*
-        TableColumn<Customer, Integer> colId = new TableColumn<>("ID");
-        colId.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-        colId.setMinWidth(5);
-        colId.setOnEditCommit(
-                new EventHandler<CellEditEvent<Customer, Integer>>() {
-                    @Override
-                    public void handle(CellEditEvent<Customer, Integer> t) {
-                        ((Customer) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                                ).setCustomerId(t.getNewValue());
-                    }
-                }
-            );
-        */
-        /*
-        TableColumn<Customer, String> colFName = new TableColumn<>("First Name");
-        colFName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        colFName.setOnEditCommit(
-                new EventHandler<CellEditEvent<Customer, String>>() {
-                    @Override
-                    public void handle(CellEditEvent<Customer, String> t) {
-                        ((Customer) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                                ).setFirstName(t.getNewValue());
-                    }
-                }
-            ); */
-        //table.setEditable(true);
+     
         
         TableColumn<Customer,String> colFName = new TableColumn<>("First Name");
         colFName.setPrefWidth(80);
@@ -322,31 +269,19 @@ public class CustomerFX{
             }
         );
         
-        
-        //System.out.println(customerMap.get(101));
-        /*
-        TableColumn<Customer, String> colLName = new TableColumn<>("Last Name");
-        colLName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-*/
+       
         
         //table.setEditable(true);
         table.getColumns().addAll(colId,colFName,colLName,colEmail,colPhone,colAddress,colPostcode,colDOB);
         root.getChildren().addAll(table);
         
-	    //StackPane root = new StackPane();
-        //AnchorPane.setTopAnchor(btn, 10.0);
-	    //AnchorPane.setTopAnchor(listView, 30.0);
-        //root.getChildren().addAll(listView,btn);
+	 
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
         vbox.getChildren().addAll(label1, hb,table);
         root.getChildren().addAll(vbox);
-        //((Group) scene.getRoot()).getChildren().addAll(vbox);
-        
-        
-    
-        
+  
 	  } // End initCustomerForm
 	
 	public static void addCustomerFX(Stage stage, Map<Integer,Customer> customerMap, ObservableList tvObservableList) {
@@ -386,22 +321,6 @@ public class CustomerFX{
 			gridFields.add(textFields[i], 1, i);
 		}
 		
-		//gridFields.add(label1, 0, 0);
-		//gridFields.add(textField1, 1, 0);
-         /*
-         Button btn = new Button();
-         btn.setText("Submit");
-         btn.setOnAction(new EventHandler() {
-             @Override
-             public void handle(Event arg0) {
-                 System.out.println(textField.getText());
-             }
-         });
-     
-        bt1.setOnMouseClicked(event -> {
- 	    	MenuFX.setScene(stage,MenuFX.sceneCustomer);
- 	    });
- 	 	*/
 		
 		
 		Button btn1 = new Button("Apply");
@@ -428,6 +347,9 @@ public class CustomerFX{
 				 Main.customerID++;
 				 
 				 for(TextField s: textFields) s.clear(); 
+				 for(Label lbl: labels) {
+			    		lbl.setTextFill(Color.web("#000000"));
+				 }
 				 MenuFX.setScene(stage,MenuFX.sceneCustomer);	
 				 System.out.println("Added customer successful");
 				 
@@ -437,6 +359,13 @@ public class CustomerFX{
 
 	    Button btn2 = new Button("Close"); //Button close then go back customer menu
 	    btn2.setOnMouseClicked(event -> {
+	    	for(TextField tf: textFields) {
+	    		tf.clear();
+			}
+	    	for(Label lbl: labels) {
+	    		lbl.setTextFill(Color.web("#000000"));
+			}
+	    	
 	    	MenuFX.setScene(stage,MenuFX.sceneCustomer);
 	    });
 	 
