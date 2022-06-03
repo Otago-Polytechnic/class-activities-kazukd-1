@@ -40,6 +40,7 @@ import javafx.event.EventHandler;
 /**
  *  This is class using manage customer for UI(JavaFX)
  * 
+ * @author kazuhisa kondo
  */
 public class CustomerFX{
 	public static void initCustomerForm(Stage stage,Map<Integer,Customer> customerMap) {
@@ -261,6 +262,12 @@ public class CustomerFX{
                     ((Customer) t.getTableView().getItems().get(
                             t.getTablePosition().getRow())
                             ).setFirstName(t.getNewValue());
+                    
+                    int ckey = t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()).getCustomerId();
+                            
+                   update_customerDB("firstName",t.getNewValue(),ckey);
+                    
                 }
             }
         );
@@ -277,6 +284,12 @@ public class CustomerFX{
                     ((Customer) t.getTableView().getItems().get(
                             t.getTablePosition().getRow())
                             ).setLastName(t.getNewValue());
+                    
+                    int ckey = t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()).getCustomerId();
+                            
+                   update_customerDB("lastName",t.getNewValue(),ckey);
+                    
                 }
             }
         );
@@ -292,6 +305,12 @@ public class CustomerFX{
                     ((Customer) t.getTableView().getItems().get(
                             t.getTablePosition().getRow())
                             ).setLastName(t.getNewValue());
+                    
+                    int ckey = t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()).getCustomerId();
+                            
+                   update_customerDB("email",t.getNewValue(),ckey);
+                    
                 }
             }
         );
@@ -307,6 +326,12 @@ public class CustomerFX{
                     ((Customer) t.getTableView().getItems().get(
                             t.getTablePosition().getRow())
                             ).setLastName(t.getNewValue());
+                    
+                    int ckey = t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()).getCustomerId();
+                            
+                   update_customerDB("phone",t.getNewValue(),ckey);
+                    
                 }
             }
         );
@@ -322,6 +347,12 @@ public class CustomerFX{
                     ((Customer) t.getTableView().getItems().get(
                             t.getTablePosition().getRow())
                             ).setLastName(t.getNewValue());
+                    
+                    int ckey = t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()).getCustomerId();
+                            
+                   update_customerDB("address",t.getNewValue(),ckey);
+                    
                 }
             }
         );
@@ -337,6 +368,13 @@ public class CustomerFX{
                     ((Customer) t.getTableView().getItems().get(
                             t.getTablePosition().getRow())
                             ).setLastName(t.getNewValue());
+                    
+                    int ckey = t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()).getCustomerId();
+                            
+                   update_customerDB("postcode",t.getNewValue(),ckey);
+                    
+                    
                 }
             }
         );
@@ -512,5 +550,30 @@ public class CustomerFX{
 	    grid.add(hb, 1, 2);
 	 
 	}
+
+	  public static void update_customerDB(String colName, String value, int vkey) {
+		  //Database update
+	        try {
+	        	//Databases connection
+	    		Class.forName("com.mysql.jdbc.Driver");  
+	    		Connection con=DriverManager.getConnection(  
+	    		"jdbc:mysql://localhost:3306/videorental","root","");   //password root
+	    			
+	        	String query = "UPDATE customers "
+	        			+ " SET " + colName + "=?" 
+	        			+ " WHERE customerID=?";
+	        			
+	     
+			    PreparedStatement preparedStmt = (PreparedStatement) con.prepareStatement(query);
+			    preparedStmt.setString(1,value);
+			    preparedStmt.setInt(2,vkey);
+			    
+			    preparedStmt.executeUpdate();
+			    con.close();
+	        	
+	        } catch (Exception err) {
+	        	System.out.println(err);
+	        }
+	  }
 	
 }

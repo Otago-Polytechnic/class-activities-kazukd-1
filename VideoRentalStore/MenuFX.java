@@ -35,6 +35,11 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import java.sql.*;
 
+/**
+ *  This is main class using  for UI(JavaFX)
+ * 
+ * @author kazuhisa kondo
+ */
 public class MenuFX extends Application {
 	
 	// Declaration for scene variables
@@ -70,24 +75,7 @@ public class MenuFX extends Application {
 		/** Object for storing video data using HashMap */
 		Map<Integer,rentalVideo> rentalVideoMap = new HashMap<>();
 		
-		// Load customer data for test
-	    //Main.addCustomerTestData(customerMap);
 		
-		// Load rentalVideo  data for test
-		//Main.addRentalVideoTestData(rentalVideoMap);
-		
-		// rent video for test
-		//rentalVideoMap.get(1).rent(customerMap.get(100), LocalDate.parse("15/05/2022", formatter));
-		//rentalVideoMap.get(3).rent(customerMap.get(101), LocalDate.parse("20/05/2022", formatter));
-		
-		/*
-		//Databases connection
-		Class.forName("com.mysql.jdbc.Driver");  
-		Connection con=DriverManager.getConnection(  
-		"jdbc:mysql://localhost:3306/videorental","root","");   //password root
-		
-		Statement stmt=con.createStatement();  
-		*/
 		//Set Stage title and stage size for Main Form
 		stage.setTitle("Rental Video System");
 		stage.setWidth(500);
@@ -191,13 +179,8 @@ public class MenuFX extends Application {
 	    	setScene(stage2,sceneShowOverdue);
 	    });
 		
-		/*
-		btn[6].setOnMouseClicked(event -> {
-			
-			stage2.setTitle("File Management");	
-	    	setScene(stage2,sceneFile);
-	    });
-		*/
+		
+		
 		//Exit stop application
 		btn[6].setOnMouseClicked(event -> {
 			//abortAction(WINDOW_CLOSE_REQUEST)

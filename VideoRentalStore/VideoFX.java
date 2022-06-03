@@ -12,6 +12,8 @@ import java.util.Optional;
 
 import com.mysql.jdbc.PreparedStatement;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,14 +21,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -37,10 +33,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 /**
  *  This is class using manage video for UI(JavaFX)
- * 
+ *  
+ *  @author kazuhisa kondo
  */
 public class VideoFX {
 	public static void initVideoForm(Stage stage,Map<Integer,rentalVideo> rentalVideoMap,Map<Integer,Customer> customerMap) {
@@ -268,6 +266,11 @@ public class VideoFX {
                     ((rentalVideo) t.getTableView().getItems().get(
                             t.getTablePosition().getRow())
                             ).setTitle(t.getNewValue());
+                    
+                    int vkey = t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()).getRentalvideoId();
+                            
+                   update_rentalvideoDB("title",t.getNewValue(),vkey);
                 }
             }
         );
@@ -285,6 +288,13 @@ public class VideoFX {
                     ((rentalVideo) t.getTableView().getItems().get(
                             t.getTablePosition().getRow())
                             ).setMedia(t.getNewValue());
+                    
+                    int vkey = t.getTableView().getItems().get(
+                            t.getTablePosition().getRow()).getRentalvideoId();
+                            
+                   update_rentalvideoDB("media",t.getNewValue(),vkey);
+                    
+                    
                 }
             }
         );
@@ -828,8 +838,8 @@ public class VideoFX {
 		//Map<Integer,Customer> customerMap = new HashMap<>();
 		
 		// Table view
-        final TableView<rentalVideo> table = new TableView<rentalVideo>();
-        final ObservableList<rentalVideo> tvObservableList2 = FXCollections.observableArrayList();
+        final TableView table = new TableView();
+        final ObservableList tvObservableList2 = FXCollections.observableArrayList();
         //table.setEditable(true);
 		
 		AnchorPane root = new AnchorPane();
@@ -844,90 +854,20 @@ public class VideoFX {
 	    label1.setFont(new Font("Verdana", 24)); //Arial
 	    label1.setTextFill(Color.web("#0000FF"));
 	    
-	    Button btn1 = new Button("Add");
-	    Button btn2 = new Button("Delete");
 	    Button btn3 = new Button("Close");
-	    Button btn4 = new Button("Show Renting Lists");
-	    btn1.setPrefWidth(100);
-	    btn2.setPrefWidth(100);
+	  
 	    btn3.setPrefWidth(100);
-	   
-	    // Add button action
-	    btn1.setOnMouseClicked(event -> {
-	    	//change scene for add new customer 
-	    	MenuFX.setScene(stage,MenuFX.sceneAddVideo);
-	    });
-	    
-	    // Delete button action
-	    btn2.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-            	//Checking map data before deleting 
-            		System.out.println("Before deleting");
-            	for(Integer key: rentalVideoMap.keySet()){
-          			System.out.println("ID:" + key +" "+ rentalVideoMap.get(key));
-            	}
-            	 
-            	if(table.getSelectionModel().getSelectedItem() != null) {
-            		rentalVideo currentVideo = table.getSelectionModel().getSelectedItem();
-            		
-            		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        	        alert.setTitle("Confirmation");
-        	        alert.setHeaderText(null);
-        	        alert.setContentText("Are you sure to delete this title: "+ currentVideo.getTitle() +"?");
 
-        	        Optional<ButtonType> result = alert.showAndWait();
-        	        if (result.get() == ButtonType.OK) {
-        	        	tvObservableList2.remove(currentVideo);
-              	    	rentalVideoMap.remove(currentVideo.getRentalvideoId());
-              	    	System.out.println("Deleted video successfully");
-        	        } else {
-        	        	System.out.println("Canceled deleteing video");
-        	        }
-       	    	 
-        	        //Checking after map data deleting	 
-        	        System.out.println("After deleting (include cancel action");
-        	        for(Integer key: rentalVideoMap.keySet()){
-        	        	System.out.println("ID:" + key +" "+ rentalVideoMap.get(key));
-        	        }
-     	    
-            	} //end if
-            }
-	    });
 	    
 	    // close button action
 	    btn3.setOnMouseClicked(event -> {
 	    	stage.close();
 	    	
 	    //	setScene(stage,sceneMain);
-	    });
-	    
-	    // test button action for testing selected item
-	    btn4.setOnMouseClicked(event -> {
-	    	 //System.out.println(customerMap.get(101));
-	    	table.getItems().clear();
-	    	 for(Integer key: rentalVideoMap.keySet()){
-	    		 if(rentalVideoMap.get(key).isRented == true) {
-	 	         	System.out.println(rentalVideoMap.get(key).isRented);
-	 	         	tvObservableList2.add(rentalVideoMap.get(key));
-	 	 			System.out.println(rentalVideoMap.get(key));
-	 	 			}
-	    		 if(rentalVideoMap.get(key).isRented==true) System.out.println("true");
-	    		 System.out.println("ID:" + key +" "+ rentalVideoMap.get(key) + rentalVideoMap.get(key).isRented);
-	 			
-	 	    }
-	    	 
-	    	 
-	    	 
-	    });
+	    }); 
+	 
 	    hb.getChildren().addAll(btn3);
 	  
-	    for(Integer key: rentalVideoMap.keySet()){
-			System.out.println("ID:" + key +" "+ rentalVideoMap.get(key));
-			
-	    }
-	  
-	    
 	   
         // Set TableView appearance
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -935,81 +875,53 @@ public class VideoFX {
         table.setPrefHeight(250);
         
         
-        // Data set for TableView
-        for(Integer key: rentalVideoMap.keySet()){
-			//System.out.println("ID:" + key +" "+ customerMap.get(key));
-			if(rentalVideoMap.get(key).isRented == true) {
-        	System.out.println(rentalVideoMap.get(key).isRented);
-        	tvObservableList2.add(rentalVideoMap.get(key));
-			System.out.println(rentalVideoMap.get(key));
-			}
-			//data.add("ID:" + key +" "+ customerMap.get(key).toLine());
-	    }
-        table.setItems(tvObservableList2);
-  
-        TableColumn<rentalVideo,Integer> colId = new TableColumn<>("ID");
-        colId.setPrefWidth(40);
-        colId.setCellValueFactory(new PropertyValueFactory<rentalVideo, Integer>("rentalvideoId"));
-        //colId.setCellFactory(TextFieldTableCell.forTableColumn());
-        //colId.setCellFactory(col-> new IntegerEditingCell());
-        //colId.setCellFactory(Integer.parseInt(TextFieldTableCell.forTableColumn()));
-        
-        
-        TableColumn<rentalVideo,String> colTitle = new TableColumn<>("Title");
-        colTitle.setPrefWidth(80);
-        colTitle.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("title"));
-        colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
-        colTitle.setOnEditCommit(
-            new EventHandler<CellEditEvent<rentalVideo, String>>() {
-                @Override
-                public void handle(CellEditEvent<rentalVideo, String> t) {
-                    ((rentalVideo) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                            ).setTitle(t.getNewValue());
-                }
-            }
-        );
-        
-        
-        TableColumn<rentalVideo,String> colMedia = new TableColumn<>("Media");
-        //colLName.setMinWidth(100);
-        colMedia.setPrefWidth(80);
-        colMedia.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("media"));
-        colMedia.setCellFactory(TextFieldTableCell.forTableColumn());
-        colMedia.setOnEditCommit(
-            new EventHandler<CellEditEvent<rentalVideo, String>>() {
-                @Override
-                public void handle(CellEditEvent<rentalVideo, String> t) {
-                    ((rentalVideo) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                            ).setMedia(t.getNewValue());
-                }
-            }
-        );
-        
-        TableColumn<rentalVideo,String> colRenterName = new TableColumn<>("Renter");
-        //colLName.setMinWidth(100);
-        colRenterName.setPrefWidth(80);
-        colRenterName.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("renterName"));
-        colRenterName.setCellFactory(TextFieldTableCell.forTableColumn());
-        colRenterName.setOnEditCommit(
-            new EventHandler<CellEditEvent<rentalVideo, String>>() {
-                @Override
-                public void handle(CellEditEvent<rentalVideo, String> t) {
-                    ((rentalVideo) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                            ).setMedia(t.getNewValue());
-                }
-            }
-        );
+        //Data into tableview from database
+        try{
+      	  Class.forName("com.mysql.jdbc.Driver");  
+			Connection con=DriverManager.getConnection(  
+			"jdbc:mysql://localhost:3306/videorental","root","");   //password root
+          
+          //sql queryselect rentalvideos where isRented=true join customers table
+          String query = "SELECT rentalVideoID AS ID, title AS Title, media AS Media,CONCAT (customers.customerID,\": \",firstName,\" \",lastName) as Renter ,rentDate AS 'Rent Date'FROM rentalvideos "
+          		+ "JOIN customers ON rentalvideos.customerID = customers.customerID "
+          		+ "WHERE isRented = TRUE";
+          		
+          //ResultSet
+          ResultSet rs = con.createStatement().executeQuery(query);
+
+          /**********************************
+           * TABLE COLUMN ADDED DYNAMICALLY *
+           **********************************/
+          for(int i=0 ; i<rs.getMetaData().getColumnCount(); i++){
+              final int j = i;                
+              TableColumn col = new TableColumn(rs.getMetaData().getColumnLabel(i+1));//getColumnName(i+1));
+              col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList,String>,ObservableValue<String>>(){                    
+                  public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {                                                                                              
+                      return new SimpleStringProperty(param.getValue().get(j).toString());                        
+                  }                    
+              });
+
+              table.getColumns().addAll(col); 
+              
+          }
+
+          //Data add
+          while(rs.next()){
+              ObservableList<String> row = FXCollections.observableArrayList();
+              for(int i=1 ; i<=rs.getMetaData().getColumnCount(); i++){
+                  row.add(rs.getString(i));
+              }
+              tvObservableList2.add(row);
+          }
+
+          //FINALLY ADDED TO TableView
+          table.setItems(tvObservableList2);
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("Error on Building Data");             
+        }
         
        
-        TableColumn<rentalVideo,LocalDate> colRentDate = new TableColumn<>("Rent Date");
-        colRentDate.setPrefWidth(80);
-        colRentDate.setCellValueFactory(new PropertyValueFactory<rentalVideo, LocalDate>("rentDate"));
-   
-        
-        table.getColumns().addAll(colId,colTitle,colMedia,colRenterName,colRentDate);
         root.getChildren().addAll(table);
         
 
@@ -1062,20 +974,12 @@ public class VideoFX {
 	    		 System.out.println("ID:" + key +" "+ rentalVideoMap.get(key) + rentalVideoMap.get(key).isRented);
 	 			
 	 	    }
-	    	 
-	    	 
+
 	    	 
 	    });
 	    hb.getChildren().addAll(btn3);
 	
-	    
-	    for(Integer key: rentalVideoMap.keySet()){
-			System.out.println("ID:" + key +" "+ rentalVideoMap.get(key));
-			
-	    }
-	
-	    
-	   
+  
         // Set TableView appearance
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefWidth(950);
@@ -1096,37 +1000,14 @@ public class VideoFX {
         TableColumn<rentalVideo,Integer> colId = new TableColumn<>("ID");
         colId.setPrefWidth(40);
         colId.setCellValueFactory(new PropertyValueFactory<rentalVideo, Integer>("rentalvideoId"));
-        //colId.setCellFactory(TextFieldTableCell.forTableColumn());
-        //colId.setCellFactory(col-> new IntegerEditingCell());
-        //colId.setCellFactory(Integer.parseInt(TextFieldTableCell.forTableColumn()));
-        colId.setOnEditCommit(
-            new EventHandler<CellEditEvent<rentalVideo, Integer>>() {
-                @Override
-                public void handle(CellEditEvent<rentalVideo, Integer> t) {
-                    ((rentalVideo) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                            ).setRentalvideoId(t.getNewValue());
-                }
-            }
-        );
-        
       
-     
+
         
         TableColumn<rentalVideo,String> colTitle = new TableColumn<>("Title");
         colTitle.setPrefWidth(80);
         colTitle.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("title"));
         colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
-        colTitle.setOnEditCommit(
-            new EventHandler<CellEditEvent<rentalVideo, String>>() {
-                @Override
-                public void handle(CellEditEvent<rentalVideo, String> t) {
-                    ((rentalVideo) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                            ).setTitle(t.getNewValue());
-                }
-            }
-        );
+        
         
         
         TableColumn<rentalVideo,String> colMedia = new TableColumn<>("Media");
@@ -1134,32 +1015,13 @@ public class VideoFX {
         colMedia.setPrefWidth(80);
         colMedia.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("media"));
         colMedia.setCellFactory(TextFieldTableCell.forTableColumn());
-        colMedia.setOnEditCommit(
-            new EventHandler<CellEditEvent<rentalVideo, String>>() {
-                @Override
-                public void handle(CellEditEvent<rentalVideo, String> t) {
-                    ((rentalVideo) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                            ).setMedia(t.getNewValue());
-                }
-            }
-        );
+     
         
         TableColumn<rentalVideo,String> colRenterName = new TableColumn<>("Renter");
-        //colLName.setMinWidth(100);
         colRenterName.setPrefWidth(80);
         colRenterName.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("renterName"));
         colRenterName.setCellFactory(TextFieldTableCell.forTableColumn());
-        colRenterName.setOnEditCommit(
-            new EventHandler<CellEditEvent<rentalVideo, String>>() {
-                @Override
-                public void handle(CellEditEvent<rentalVideo, String> t) {
-                    ((rentalVideo) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())
-                            ).setMedia(t.getNewValue());
-                }
-            }
-        );
+      
         TableColumn<rentalVideo,LocalDate> colRentDate = new TableColumn<>("Rent Date");
         colRentDate.setPrefWidth(80);
         colRentDate.setCellValueFactory(new PropertyValueFactory<rentalVideo, LocalDate>("rentDate"));
@@ -1177,6 +1039,29 @@ public class VideoFX {
     
 	  } // End Show overdue video lists
 	
-	
+	  public static void update_rentalvideoDB(String colName, String value, int vkey) {
+		  //Database update
+	        try {
+	        	//Databases connection
+	    		Class.forName("com.mysql.jdbc.Driver");  
+	    		Connection con=DriverManager.getConnection(  
+	    		"jdbc:mysql://localhost:3306/videorental","root","");   //password root
+	    			
+	        	String query = "UPDATE rentalvideos "
+	        			+ " SET " + colName + "=?" 
+	        			+ " WHERE rentalVideoID=?";
+	        			
+	     
+			    PreparedStatement preparedStmt = (PreparedStatement) con.prepareStatement(query);
+			    preparedStmt.setString(1,value);
+			    preparedStmt.setInt(2,vkey);
+			    
+			    preparedStmt.executeUpdate();
+			    con.close();
+	        	
+	        } catch (Exception err) {
+	        	System.out.println(err);
+	        }
+	  }
 	
 }
