@@ -1,10 +1,11 @@
 package VideoRentalStore;
 
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
+import com.mysql.jdbc.PreparedStatement;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -96,11 +97,53 @@ public class CustomerFX{
         	        if (result.get() == ButtonType.OK) {
         	        	tvObservableList.remove(currentCustomer);
               	    	customerMap.remove(currentCustomer.getCustomerId());
-              	    	System.out.println("Deleted customer successfully");
+              	    	
+              	    //Database delete
+    			        try {
+    			        	//Databases connection
+    			    		Class.forName("com.mysql.jdbc.Driver");  
+    			    		Connection con=DriverManager.getConnection(  
+    			    		"jdbc:mysql://localhost:3306/videorental","root","");   //password root
+    			    			
+    			        	String query = "DELETE FROM customers "
+    			        			+ "WHERE customerID=?";
+    			        			
+    			     
+    					    PreparedStatement preparedStmt = (PreparedStatement) con.prepareStatement(query);
+    					    preparedStmt.setInt(1,currentCustomer.getCustomerId());
+    					    
+    					    preparedStmt.executeUpdate();
+    					    con.close();
+    			        	
+    			        } catch (Exception err) {
+    			        	System.out.println(err);
+    			        }
+              	    	
+    			       
+    			        
+            	        Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+            	        alert2.setTitle("Information");
+            	        alert2.setHeaderText(null);
+            	        alert2.setContentText("Deleted customer successfully! ");
+
+            	        Optional<ButtonType> result2 = alert2.showAndWait();
+            	        if (result2.get() == ButtonType.OK) {
+            	        	
+            	        	System.out.println("Deleted customer successfully");
+                  	    	
+            	        } else {
+            	        	
+            	        }
+              	    	
+              	    	
+              	    	
         	        } else {
         	        	System.out.println("Canceled deleteing customer");
         	        }
        	    	 
+        	        
+        	        
+        	        //System.out.println("Deleted customer successfully");
         	        //Checking after map data deleting	 
         	        System.out.println("After deleting (include cancel action");
         	        for(Integer key: customerMap.keySet()){
@@ -135,15 +178,59 @@ public class CustomerFX{
         table.setPrefWidth(950);
         table.setPrefHeight(250);
    
-        
+        /*
         // Data set for TableView
         for(Integer key: customerMap.keySet()){
 			//System.out.println("ID:" + key +" "+ customerMap.get(key));
 			tvObservableList.add(customerMap.get(key));
 			//data.add("ID:" + key +" "+ customerMap.get(key).toLine());
 	    }
+	    */
+       
+		
+        //Set Data from database
+        ResultSet resultSet = null;
+        try {
+        	//Databases connection
+    		Class.forName("com.mysql.jdbc.Driver");  
+    		Connection con=DriverManager.getConnection(  
+    		"jdbc:mysql://localhost:3306/videorental","root","");   //password root
+    		
+    		Statement stmt=con.createStatement();  
+        	resultSet=stmt.executeQuery("select * from customers");
+        	
+        } catch (Exception e) {
+        	System.out.println(e);
+        }
+        
+        //ArrayList<Customer> data =  new ArrayList<>();
+        try {
+        while (resultSet.next()) {
+        	Customer customer = new Customer();
+        	customer.setCustomerId(resultSet.getInt("customerID"));
+        	customer.setFirstName(resultSet.getString("firstName"));
+        	customer.setLastName(resultSet.getString("lastName"));
+        	customer.setEmail(resultSet.getString("email"));
+        	customer.setPhone(resultSet.getString("phone"));
+        	customer.setAddress (resultSet.getString("address"));
+        	customer.setPostcode (resultSet.getString("postcode"));
+        	customer.setDOB(LocalDate.parse(resultSet.getString("DOB")));
+        	
+            //data.add(customer);
+        	customerMap.put(resultSet.getInt("customerID"), customer);
+        	tvObservableList.add(customer);
+        	
+        	}
+        
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        //ObservableList dbData = FXCollections.observableArrayList(data);
+        //tvObservableList = FXCollections.observableArrayList(data);
         table.setItems(tvObservableList);
-  
+        //table.setItems(dbData);
+ 
         TableColumn<Customer,Integer> colId = new TableColumn<>("ID");
         colId.setPrefWidth(40);
         colId.setCellValueFactory(new PropertyValueFactory<Customer, Integer>("customerId"));
@@ -341,15 +428,61 @@ public class CustomerFX{
 			if(empty==false) {
 				
 				 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-				 Customer customer1 = new Customer(Main.customerID,textFields[0].getText(),textFields[1].getText(),textFields[2].getText(),textFields[3].getText(),textFields[4].getText(),textFields[5].getText(),LocalDate.parse(textFields[6].getText(),formatter));
-				 customerMap.put(Main.customerID,customer1);
-				 tvObservableList.add(customer1);
-				 Main.customerID++;
+				
 				 
-				 for(TextField s: textFields) s.clear(); 
 				 for(Label lbl: labels) {
 			    		lbl.setTextFill(Color.web("#000000"));
 				 }
+				 
+				 
+				//Database add
+			        try {
+			        	//Databases connection
+			    		Class.forName("com.mysql.jdbc.Driver");  
+			    		Connection con=DriverManager.getConnection(  
+			    		"jdbc:mysql://localhost:3306/videorental","root","");   //password root
+			    			
+			        	String query = "INSERT INTO customers "
+			        			+ "(firstName,lastName,email,phone,address,postcode,DOB)"
+			        			+  "values(?,?,?,?,?,?,?)";
+			        	
+					    PreparedStatement preparedStmt = (PreparedStatement) con.prepareStatement(query);
+					    preparedStmt.setString(1,textFields[0].getText() );
+					    preparedStmt.setString(2, textFields[1].getText());
+					    preparedStmt.setString(3,textFields[2].getText() );
+					    preparedStmt.setString(4, textFields[3].getText());
+					    preparedStmt.setString(5,textFields[4].getText() );
+					    preparedStmt.setString(6, textFields[5].getText());
+					    DateTimeFormatter dbformatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+					    LocalDate dbDOB = LocalDate.parse(textFields[6].getText(),formatter);
+					    preparedStmt.setString(7,dbDOB.format(dbformatter));
+					    
+					    preparedStmt.executeUpdate();
+					    
+					    int last_inserted_id=0;
+					    //ResultSet rs = preparedStmt.getGeneratedKeys();
+					    Statement st = con.createStatement();
+			            ResultSet rs = st.executeQuery("SELECT LAST_INSERT_ID() FROM customers");
+					    if(rs.next())
+			            {
+
+			                last_inserted_id=rs.getInt(1);
+
+			            }
+			            
+			            
+			             Customer customer1 = new Customer(last_inserted_id,textFields[0].getText(),textFields[1].getText(),textFields[2].getText(),textFields[3].getText(),textFields[4].getText(),textFields[5].getText(),LocalDate.parse(textFields[6].getText(),formatter));
+						 customerMap.put(last_inserted_id,customer1);
+						 tvObservableList.add(customer1);
+						 
+					    
+					    con.close();
+			        	
+			        } catch (Exception e) {
+			        	System.out.println(e);
+			        }
+			     
+			     for(TextField s: textFields) s.clear(); 
 				 MenuFX.setScene(stage,MenuFX.sceneCustomer);	
 				 System.out.println("Added customer successful");
 				 

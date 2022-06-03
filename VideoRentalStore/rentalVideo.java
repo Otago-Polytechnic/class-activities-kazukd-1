@@ -93,6 +93,13 @@ public class rentalVideo implements rental {
 		 rentDate = _rentDate;
 	 }
 	 
+	 public void setIsRented(boolean _isRented) {
+		 isRented=_isRented;
+	 }
+	 
+	 public void setRenter(Customer _renter) {
+		 renter = _renter;
+	 }
 	 
 	public int getRentalvideoId() {
 			return this.rentalvideoId;

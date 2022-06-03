@@ -1,9 +1,16 @@
 package VideoRentalStore;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Optional;
+
+import com.mysql.jdbc.PreparedStatement;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -36,7 +43,7 @@ import javafx.stage.Stage;
  * 
  */
 public class VideoFX {
-	public static void initVideoForm(Stage stage,Map<Integer,rentalVideo> rentalVideoMap) {
+	public static void initVideoForm(Stage stage,Map<Integer,rentalVideo> rentalVideoMap,Map<Integer,Customer> customerMap) {
 		
 		
 		// Table view
@@ -91,7 +98,42 @@ public class VideoFX {
         	        if (result.get() == ButtonType.OK) {
         	        	tvObservableList2.remove(currentVideo);
               	    	rentalVideoMap.remove(currentVideo.getRentalvideoId());
-              	    	System.out.println("Deleted video successfully");
+              	    	
+              	    //Database delete
+    			        try {
+    			        	//Databases connection
+    			    		Class.forName("com.mysql.jdbc.Driver");  
+    			    		Connection con=DriverManager.getConnection(  
+    			    		"jdbc:mysql://localhost:3306/videorental","root","");   //password root
+    			    			
+    			        	String query = "DELETE FROM rentalvideos "
+    			        			+ "WHERE rentalVideoID=?";
+    			        			
+    			     
+    					    PreparedStatement preparedStmt = (PreparedStatement) con.prepareStatement(query);
+    					    preparedStmt.setInt(1,currentVideo.getRentalvideoId());
+    					    
+    					    preparedStmt.executeUpdate();
+    					    con.close();
+    			        	
+    			        } catch (Exception err) {
+    			        	System.out.println(err);
+    			        }
+    			        Alert alert2 = new Alert(Alert.AlertType.INFORMATION);
+	        	        alert2.setTitle("Information");
+	        	        alert2.setHeaderText(null);
+	        	        alert2.setContentText("Deleted video successfully! ");
+
+	        	        Optional<ButtonType> result2 = alert2.showAndWait();
+	        	        if (result2.get() == ButtonType.OK) {
+	        	        	
+	        	        	System.out.println("Deleted video successfully");
+	              	    	
+	        	        } else {
+	        	        	
+	        	        }
+              	    	
+              	    	
         	        } else {
         	        	System.out.println("Canceled deleteing video");
         	        }
@@ -134,13 +176,66 @@ public class VideoFX {
         table.setPrefWidth(950);
         table.setPrefHeight(250);
         
- 
+        /*
         // Data set for TableView
         for(Integer key: rentalVideoMap.keySet()){
 			//System.out.println("ID:" + key +" "+ customerMap.get(key));
 			tvObservableList2.add(rentalVideoMap.get(key));
 			//data.add("ID:" + key +" "+ customerMap.get(key).toLine());
 	    }
+        */
+        
+
+        //Set data from database
+        ResultSet resultSet = null;
+        try {
+        	//Databases connection
+    		Class.forName("com.mysql.jdbc.Driver");  
+    		Connection con=DriverManager.getConnection(  
+    		"jdbc:mysql://localhost:3306/videorental","root","");   //password root
+    		
+    		Statement stmt=con.createStatement();  
+        	resultSet=stmt.executeQuery("select * from rentalvideos");
+        	
+        } catch (Exception e) {
+        	System.out.println(e);
+        }
+        
+        //ArrayList<Customer> data =  new ArrayList<>();
+        try {
+        while (resultSet.next()) {
+        	rentalVideo rentalvideo = new rentalVideo();
+        	rentalvideo.setRentalvideoId(resultSet.getInt("rentalVideoID"));
+        	rentalvideo.setTitle(resultSet.getString("title"));
+        	rentalvideo.setMedia(resultSet.getString("media"));
+        	
+        	rentalvideo.setIsRented(resultSet.getBoolean("isRented"));
+        	
+        	try {
+        		
+        		rentalvideo.setRentDate(LocalDate.parse(resultSet.getString("rentDate")));
+        	}catch(Exception e){}
+        	
+        	if(resultSet.getString("customerID")!=null) {
+        		int customerID = resultSet.getInt("customerID");
+        		Customer customer = customerMap.get(customerID);
+        		rentalvideo.setRenter(customer);
+        		rentalvideo.setRenterName(Integer.toString(customerID) + ": "+ customer.getFirstName()
+        		                                + customer.getLastName());
+        	}
+        	        	
+        	
+            //data.add(customer);
+        	rentalVideoMap.put(resultSet.getInt("rentalVideoID"), rentalvideo);
+        	tvObservableList2.add(rentalvideo);
+        	
+        	}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        
+        
         table.setItems(tvObservableList2);
   
         TableColumn<rentalVideo,Integer> colId = new TableColumn<>("ID");
@@ -270,11 +365,48 @@ public class VideoFX {
 			}
 			if(empty==false) {
 				
-				 
-				 rentalVideo rentalvideo1 = new rentalVideo(Main.rentalVideoId,textFields[0].getText(),textFields[1].getText());
-				 rentalVideoMap.put(Main.rentalVideoId,rentalvideo1);
-				 tvObservableList.add(rentalvideo1);
-				 Main.rentalVideoId++;
+				//Database add
+		        try {
+		        	//Databases connection
+		    		Class.forName("com.mysql.jdbc.Driver");  
+		    		Connection con=DriverManager.getConnection(  
+		    		"jdbc:mysql://localhost:3306/videorental","root","");   //password root
+		    			
+		        	String query = "INSERT INTO rentalvideos "
+		        			+ "(title,media)"
+		        			+  "values(?,?)";
+		        	
+				    PreparedStatement preparedStmt = (PreparedStatement) con.prepareStatement(query);
+				    preparedStmt.setString(1,textFields[0].getText() );
+				    preparedStmt.setString(2, textFields[1].getText());
+				    
+				    
+				    preparedStmt.executeUpdate();
+				    
+				    int last_inserted_id=0;
+				    //ResultSet rs = preparedStmt.getGeneratedKeys();
+				    Statement st = con.createStatement();
+		            ResultSet rs = st.executeQuery("SELECT LAST_INSERT_ID() FROM customers");
+				    if(rs.next())
+		            {
+
+		                last_inserted_id=rs.getInt(1);
+
+		            }
+		            
+		            
+				    rentalVideo rentalvideo1 = new rentalVideo(last_inserted_id,textFields[0].getText(),textFields[1].getText());
+					 rentalVideoMap.put(last_inserted_id,rentalvideo1);
+					 tvObservableList.add(rentalvideo1);
+					 
+					 
+				    
+				    con.close();
+		        	
+		        } catch (Exception e) {
+		        	System.out.println(e);
+		        } 
+				
 				 
 				 for(TextField s: textFields) s.clear(); 
 				 MenuFX.setScene(stage,MenuFX.sceneVideo);	
@@ -425,6 +557,37 @@ public class VideoFX {
 									System.out.println("Renting video is not available more than two videos.");
 								}else {
 									rentalVideoMap.get(vkey).rent(customerMap.get(ckey), LocalDate.now());
+									
+									 //Database update
+			    			        try {
+			    			        	//Databases connection
+			    			    		Class.forName("com.mysql.jdbc.Driver");  
+			    			    		Connection con=DriverManager.getConnection(  
+			    			    		"jdbc:mysql://localhost:3306/videorental","root","");   //password root
+			    			    			
+			    			        	String query = "UPDATE rentalvideos "
+			    			        			+ " SET isRented= ? , rentDate=? , customerID= ? WHERE rentalVideoID=?";
+			    			        			
+			    			     
+			    					    PreparedStatement preparedStmt = (PreparedStatement) con.prepareStatement(query);
+			    					    preparedStmt.setBoolean(1,true);
+			    					    DateTimeFormatter dbformatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			    					    preparedStmt.setString(2,LocalDate.now().format(dbformatter));
+			    					    preparedStmt.setInt(3,ckey);
+			    					    preparedStmt.setInt(4,vkey);
+			    					    
+			    					    preparedStmt.executeUpdate();
+			    					    con.close();
+			    			        	
+			    			        } catch (Exception err) {
+			    			        	System.out.println(err);
+			    			        }
+									
+									
+									
+									
+									
+									
 									System.out.println("Successful rented!");
 									for(TextField s: textFields) s.clear(); 
 									for(Label s: lblMessage) s.setText("");
@@ -579,6 +742,34 @@ public class VideoFX {
 							
 			
 					rentalVideoMap.get(vkey).returnRental();
+					
+					 //Database update
+			        try {
+			        	//Databases connection
+			    		Class.forName("com.mysql.jdbc.Driver");  
+			    		Connection con=DriverManager.getConnection(  
+			    		"jdbc:mysql://localhost:3306/videorental","root","");   //password root
+			    			
+			        	String query = "UPDATE rentalvideos "
+			        			+ " SET isRented= ? , rentDate=? , customerID= ? WHERE rentalVideoID=?";
+			        			
+			     
+					    PreparedStatement preparedStmt = (PreparedStatement) con.prepareStatement(query);
+					    preparedStmt.setBoolean(1,false);
+					    preparedStmt.setString(2,null);
+					    preparedStmt.setString(3,null);
+					    preparedStmt.setInt(4,vkey);
+					    
+					    preparedStmt.executeUpdate();
+					    con.close();
+			        	
+			        } catch (Exception err) {
+			        	System.out.println(err);
+			        }
+					
+					
+					
+					
 					for(TextField tf: textFields) {
 			    		tf.clear();
 					}

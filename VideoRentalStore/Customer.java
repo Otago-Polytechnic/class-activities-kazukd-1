@@ -45,6 +45,7 @@ public class Customer {
 	 *@param postcode the post code for customer
 	 *@param DOB the birthday  for customer
      */
+	public Customer() {}
 	public Customer(int customerId, String firstName, String lastName, String email, String phone, String address, String postcode, LocalDate DOB) {
 		this.customerId = customerId;
 		this.firstName = firstName;

@@ -497,7 +497,7 @@ public class Main {
 		
 		// checking file exists
 		boolean fileExists;
-		File filename = new File("C:\\TMA3_Project_Q3_Sol\\video.txt");
+		File filename = new File("C:\\TMA3_Project_Q3_Sol\\video2.txt");
 		fileExists = filename.exists();
 		if(fileExists) {
 			System.out.println("File already exists.");
@@ -515,7 +515,7 @@ public class Main {
 		}
 		else {
 			try{
-    			FileWriter file = new FileWriter("C:\\TMA3_Project_Q3_Sol\\video.txt");
+    			FileWriter file = new FileWriter("C:\\TMA3_Project_Q3_Sol\\video2.txt");
     			file.write("ID;title;media;isRented;renter;rentDate\n");
     			for(Integer key: rentalVideoMap.keySet()){
     				file.write(key+";"+ rentalVideoMap.get(key).toLine());
