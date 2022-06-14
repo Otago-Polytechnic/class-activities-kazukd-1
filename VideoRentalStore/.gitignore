@@ -44,3 +44,5 @@
 /FileFX.class
 /FileFX$1.class
 /DatabaseControl.class
+/Server.class
+/Server$ServerThread.class

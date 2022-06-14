@@ -777,15 +777,17 @@ public class VideoFX {
 			        	System.out.println(err);
 			        }
 					
-					
-					
-					
+
+					//clear text field
 					for(TextField tf: textFields) {
 			    		tf.clear();
 					}
+					
+					//change label color default
 			    	for(Label lbl: labels) {
 			    		lbl.setTextFill(Color.web("#000000"));
 					}
+			    	
 			    	for(Label lblmsg: lblMessage) {
 			    		lblmsg.setText("");
 			    		lblmsg.setTextFill(Color.web("#000000"));
@@ -815,9 +817,7 @@ public class VideoFX {
 	    		lblmsg.setText("");
 	    		lblmsg.setTextFill(Color.web("#000000"));
 			}
-	    	
-	    	
-	    	
+   	
 	    	stage.close();
 	    });
 	 
@@ -881,17 +881,15 @@ public class VideoFX {
 			Connection con=DriverManager.getConnection(  
 			"jdbc:mysql://localhost:3306/videorental","root","");   //password root
           
-          //sql queryselect rentalvideos where isRented=true join customers table
+         
           String query = "SELECT rentalVideoID AS ID, title AS Title, media AS Media,CONCAT (customers.customerID,\": \",firstName,\" \",lastName) as Renter ,rentDate AS 'Rent Date'FROM rentalvideos "
           		+ "JOIN customers ON rentalvideos.customerID = customers.customerID "
           		+ "WHERE isRented = TRUE";
           		
-          //ResultSet
+          
           ResultSet rs = con.createStatement().executeQuery(query);
 
-          /**********************************
-           * TABLE COLUMN ADDED DYNAMICALLY *
-           **********************************/
+          
           for(int i=0 ; i<rs.getMetaData().getColumnCount(); i++){
               final int j = i;                
               TableColumn col = new TableColumn(rs.getMetaData().getColumnLabel(i+1));//getColumnName(i+1));
@@ -914,11 +912,11 @@ public class VideoFX {
               tvObservableList2.add(row);
           }
 
-          //FINALLY ADDED TO TableView
+          
           table.setItems(tvObservableList2);
         }catch(Exception e){
             e.printStackTrace();
-            System.out.println("Error on Building Data");             
+            System.out.println("Error database query");             
         }
         
        
@@ -935,11 +933,11 @@ public class VideoFX {
     
 	  } // End Show renting video lists
 
-	public static void initShowOverdueVideoListsForm(Stage stage,Map<Integer,rentalVideo> rentalVideoMap) {
+public static void initShowOverdueVideoListsForm(Stage stage,Map<Integer,rentalVideo> rentalVideoMap) {
 		
 		// Table view
-        final TableView<rentalVideo> table = new TableView<rentalVideo>();
-        final ObservableList<rentalVideo> tvObservableList2 = FXCollections.observableArrayList();
+        final TableView table = new TableView();
+        final ObservableList tvObservableList2 = FXCollections.observableArrayList();
         
 		
 		AnchorPane root = new AnchorPane();
@@ -951,7 +949,7 @@ public class VideoFX {
 	    label1.setTextFill(Color.web("#0000FF"));
 	    
 	    Button btn3 = new Button("Close");
-	    Button btn4 = new Button("Show Renting Lists");
+	   
 	    
 	    btn3.setPrefWidth(100);
 
@@ -960,73 +958,60 @@ public class VideoFX {
 	    	stage.close();
 	    });
 	    
-	    // test button action for testing selected item
-	    btn4.setOnMouseClicked(event -> {
-	    	 //System.out.println(customerMap.get(101));
-	    	table.getItems().clear();
-	    	 for(Integer key: rentalVideoMap.keySet()){
-	    		 if(rentalVideoMap.get(key).isOverdue(LocalDate.now()) == true) {
-	 	         	System.out.println(rentalVideoMap.get(key).isRented);
-	 	         	tvObservableList2.add(rentalVideoMap.get(key));
-	 	 			System.out.println(rentalVideoMap.get(key));
-	 	 			}
-	    		 if(rentalVideoMap.get(key).isOverdue(LocalDate.now())==true) System.out.println("true");
-	    		 System.out.println("ID:" + key +" "+ rentalVideoMap.get(key) + rentalVideoMap.get(key).isRented);
-	 			
-	 	    }
-
-	    	 
-	    });
+	    
 	    hb.getChildren().addAll(btn3);
 	
-  
         // Set TableView appearance
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.setPrefWidth(950);
         table.setPrefHeight(250);
   
-        // Data set for TableView
-        for(Integer key: rentalVideoMap.keySet()){
-			
-			if(rentalVideoMap.get(key).isOverdue(LocalDate.now()) == true) {
-        	System.out.println(rentalVideoMap.get(key).getRentDate());
-        	tvObservableList2.add(rentalVideoMap.get(key));
-			System.out.println("Overdue:" + rentalVideoMap.get(key));
-			}
-			
-	    }
-        table.setItems(tvObservableList2);
- 
-        TableColumn<rentalVideo,Integer> colId = new TableColumn<>("ID");
-        colId.setPrefWidth(40);
-        colId.setCellValueFactory(new PropertyValueFactory<rentalVideo, Integer>("rentalvideoId"));
-      
+        
+        //Data into tableview from database
+        try{
+      	  Class.forName("com.mysql.jdbc.Driver");  
+			Connection con=DriverManager.getConnection(  
+			"jdbc:mysql://localhost:3306/videorental","root","");   //password root
+          
+          // over 5 days is over due
+          String query = "SELECT rentalVideoID AS ID, title AS Title, media AS Media,CONCAT (customers.customerID,\": \",firstName,\" \",lastName) as Renter ,rentDate AS 'Rent Date'FROM rentalvideos "
+          		+ "JOIN customers ON rentalvideos.customerID = customers.customerID "
+          		+ "WHERE datediff(NOW(),rentalvideos.rentDate)>5";
+          		
+          
+          ResultSet rs = con.createStatement().executeQuery(query);
 
+          
+          for(int i=0 ; i<rs.getMetaData().getColumnCount(); i++){
+              final int j = i;                
+              TableColumn col = new TableColumn(rs.getMetaData().getColumnLabel(i+1));//getColumnName(i+1));
+              col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList,String>,ObservableValue<String>>(){                    
+                  public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {                                                                                              
+                      return new SimpleStringProperty(param.getValue().get(j).toString());                        
+                  }                    
+              });
+
+              table.getColumns().addAll(col); 
+              
+          }
+
+          //Data add
+          while(rs.next()){
+              ObservableList<String> row = FXCollections.observableArrayList();
+              for(int i=1 ; i<=rs.getMetaData().getColumnCount(); i++){
+                  row.add(rs.getString(i));
+              }
+              tvObservableList2.add(row);
+          }
+          
+          table.setItems(tvObservableList2);
+          
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("Error database query");             
+        }
         
-        TableColumn<rentalVideo,String> colTitle = new TableColumn<>("Title");
-        colTitle.setPrefWidth(80);
-        colTitle.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("title"));
-        colTitle.setCellFactory(TextFieldTableCell.forTableColumn());
         
-        
-        
-        TableColumn<rentalVideo,String> colMedia = new TableColumn<>("Media");
-        //colLName.setMinWidth(100);
-        colMedia.setPrefWidth(80);
-        colMedia.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("media"));
-        colMedia.setCellFactory(TextFieldTableCell.forTableColumn());
-     
-        
-        TableColumn<rentalVideo,String> colRenterName = new TableColumn<>("Renter");
-        colRenterName.setPrefWidth(80);
-        colRenterName.setCellValueFactory(new PropertyValueFactory<rentalVideo, String>("renterName"));
-        colRenterName.setCellFactory(TextFieldTableCell.forTableColumn());
-      
-        TableColumn<rentalVideo,LocalDate> colRentDate = new TableColumn<>("Rent Date");
-        colRentDate.setPrefWidth(80);
-        colRentDate.setCellValueFactory(new PropertyValueFactory<rentalVideo, LocalDate>("rentDate"));
-             
-        table.getColumns().addAll(colId,colTitle,colMedia,colRenterName,colRentDate);
         root.getChildren().addAll(table);
         
 	   

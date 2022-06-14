@@ -46,6 +46,13 @@ public class Customer {
 	 *@param DOB the birthday  for customer
      */
 	public Customer() {}
+	public Customer(int customerId, String firstName, String lastName){
+		this.customerId = customerId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		
+	
+	}
 	public Customer(int customerId, String firstName, String lastName, String email, String phone, String address, String postcode, LocalDate DOB) {
 		this.customerId = customerId;
 		this.firstName = firstName;
@@ -224,5 +231,22 @@ public class Customer {
 			
 		}
 	
+	 public String toSocket() {
+		   // set date format for New Zealand
+		   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		   String strDOB;
+		   
+		   try {
+			   strDOB = DOB.format(formatter);
+		   }
+		   catch (Exception e) {
+			   strDOB = "null";
+		   }
+		   
+			return customerId + ";" + firstName   + ";"+ lastName + ";" + email  
+					+";" + phone + ";" + address + ";" + postcode + ";" + strDOB + "\n";
+			
+		}
+	 
 	
 }
