@@ -7,7 +7,13 @@ import java.io.*;
 import java.util.Arrays;
 
 import com.mysql.jdbc.PreparedStatement;
-
+/**
+ * This is server class for connect client and 
+ *     receive request from client.
+ * 
+ * @author Kazuhisa Kondo
+ *
+ */
 public class Server{
 	 private ServerThread servers[];
 	static int serversStatus[];
@@ -17,7 +23,7 @@ public class Server{
 	
 	public void execute()
 	{
-		int ServerThreadMax=2;
+		int ServerThreadMax=5;  // set available client connection number
 		servers = new ServerThread[ServerThreadMax];
 		serversStatus = new int[ServerThreadMax];
 		
@@ -28,16 +34,16 @@ public class Server{
 		while (true)
 		{
 			if(Arrays.stream(serversStatus).sum() < ServerThreadMax){
-				System.out.println("sum"+Arrays.stream(serversStatus).sum() );
+				//System.out.println("sum"+Arrays.stream(serversStatus).sum() );
 				for(int i=0; i < ServerThreadMax;i++) {
-					System.out.println(serversStatus[i]);
+					//System.out.println(serversStatus[i]);
 					if(serversStatus[i]==0) {
 						nserver = i;
 						System.out.println("kita" + nserver);
 						break;
 					}
 				}
-				System.out.println("nserver"+nserver);
+				//System.out.println("nserver"+nserver);
 				serversStatus[nserver]=1; // 1: Connected
 				System.out.println("Server " + nserver + " waiting");
 				servers[nserver] = new ServerThread(server.accept(), nserver);
@@ -113,6 +119,13 @@ private class ServerThread extends Thread
 							ps.println("END");
 							break;
 						
+						case "C_add":
+							for(String s:tokens) System.out.println(s);
+							System.out.println("Customer add");
+							ps.println(dbControl.addCustomer(tokens));
+							break;
+						
+						//customer update	
 						case "C_update":
 							//DatabaseControl dbControl2=new DatabaseControl();
 							System.out.println(line);
@@ -129,10 +142,91 @@ private class ServerThread extends Thread
 							
 							break;
 							
+						//customer delete
 						case "C_del":
 							dbControl.deleteCustomer(tokens);
 							break;
+						
 							
+						case "C_exist":
+							System.out.println("v exist");
+							ps.println(dbControl.checkExistCustomer(tokens));
+							break;
+						//video all	
+						case "V_all":
+							System.out.println("Request video all data");
+							String videos[] = dbControl.getVideos();
+							for(String s:videos) ps.print(s); // send all video data to client
+							ps.println("END");
+							break;
+						
+						//video renting lists
+						case "V_RentingLists":
+							System.out.println("Request renting video all data");
+							String rentedLists[] = dbControl.getRentingVideos();
+							for(String s:rentedLists) System.out.println(s);
+							for(String s:rentedLists) ps.print(s); // send rented video data to client
+							ps.println("END");
+							break;
+						
+							//video overdue lists
+						case "V_OverdueLists":
+							System.out.println("Request renting video all data");
+							String overdueLists[] = dbControl.getOverdueVideos();
+							for(String s:overdueLists) System.out.println(s);
+							for(String s:overdueLists) ps.print(s); // send rented video data to client
+							ps.println("END");
+							break;
+						
+							
+							
+						//video add
+						case "V_add":
+							for(String s:tokens) System.out.println(s);
+							System.out.println("video add");
+							ps.println(dbControl.addVideo(tokens));
+							break;
+						
+						//video update	
+						case "V_update":
+							//DatabaseControl dbControl2=new DatabaseControl();
+							System.out.println(line);
+							
+							//customer.setCustomerId(10);
+							//customer.setFirstName(tokens[2]);
+							//customer.setLastName(tokens[3]);
+							
+							System.out.println("before update");
+							//Customer c = customer;
+							
+							dbControl.updateVideo(tokens);
+							
+							
+							break;
+							
+						//video delete
+						case "V_del":
+							dbControl.deleteVideo(tokens);
+							break;	
+						
+						case "V_exist":
+							System.out.println("v exist");
+							ps.println(dbControl.checkExistVideo(tokens));
+							break;
+							
+						case "V_rental":
+							dbControl.rentalVideo(tokens);
+							break;
+							
+						case "V_return":
+							dbControl.returnVideo(tokens);
+							break;
+						
+						case "V_isRented":
+							System.out.println("v isRented");
+							ps.println(dbControl.checkisRentedVideo(tokens));
+							break;
+						
 						case "quit": 
 							System.out.println("switch quit");
 							break;

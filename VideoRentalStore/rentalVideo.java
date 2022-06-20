@@ -213,6 +213,31 @@ public class rentalVideo implements rental {
 			return title  + ";"+ media + ";" + isRented +";" + strRenter + ";" + strRentDate + "\n";
 			
 		}
+	 
+	 public String toSocket() {
+		   // set date format for New Zealand
+		   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		   String strRentDate;
+		   String strRenter;
+		   
+		   try {
+			   strRentDate = rentDate.format(formatter);
+		   }
+		   catch (Exception e) {
+			   strRentDate = "null";
+		   }
+		   
+		   try {
+			   strRenter = Integer.toString(renter.getCustomerId());
+		   }
+		   catch (Exception e) {
+			   strRenter = null;
+		   }
+		   
+			return rentalvideoId+ ";"+ title  + ";"+ media + ";" + isRented +";" + strRentDate + ";" + renterName + "\n";
+			
+		}
+	 
  
 }
 
